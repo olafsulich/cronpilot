@@ -1,0 +1,134 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Team {
+  id               String       @id @default(cuid())
+  name             String
+  slug             String       @unique
+  plan             String       @default("free")
+  stripeCustomerId String?
+  trialEndsAt      DateTime?
+  createdAt        DateTime     @default(now())
+
+  members     TeamMember[]
+  monitors    Monitor[]
+  integrations Integration[]
+
+  @@index([slug])
+}
+
+model User {
+  id           String       @id @default(cuid())
+  email        String       @unique
+  passwordHash String
+  createdAt    DateTime     @default(now())
+
+  teams TeamMember[]
+
+  @@index([email])
+}
+
+model TeamMember {
+  userId   String
+  teamId   String
+  role     String   @default("member")
+  joinedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@id([userId, teamId])
+  @@index([teamId])
+  @@index([userId])
+}
+
+model Monitor {
+  id            String    @id @default(cuid())
+  teamId        String
+  name          String
+  schedule      String
+  timezone      String    @default("UTC")
+  gracePeriod   Int       @default(300)
+  pingToken     String    @unique @default(cuid())
+  status        String    @default("active")
+  lastCheckinAt DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  team       Team        @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  checkins   Checkin[]
+  alerts     Alert[]
+  alertRules AlertRule[]
+
+  @@index([teamId])
+  @@index([teamId, status])
+  @@index([pingToken])
+  @@index([status])
+}
+
+model Checkin {
+  id         String   @id @default(cuid())
+  monitorId  String
+  receivedAt DateTime @default(now())
+  duration   Int?
+  status     String   @default("ok")
+  exitCode   Int?
+
+  monitor Monitor @relation(fields: [monitorId], references: [id], onDelete: Cascade)
+
+  @@index([monitorId])
+  @@index([monitorId, receivedAt])
+  @@index([receivedAt])
+}
+
+model Alert {
+  id           String    @id @default(cuid())
+  monitorId    String
+  type         String
+  status       String    @default("open")
+  failureCount Int       @default(0)
+  openedAt     DateTime  @default(now())
+  resolvedAt   DateTime?
+
+  monitor Monitor @relation(fields: [monitorId], references: [id], onDelete: Cascade)
+
+  @@index([monitorId])
+  @@index([monitorId, status])
+  @@index([status])
+  @@index([openedAt])
+}
+
+model Integration {
+  id              String   @id @default(cuid())
+  teamId          String
+  type            String
+  name            String
+  configEncrypted String
+  createdAt       DateTime @default(now())
+
+  team       Team        @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  alertRules AlertRule[]
+
+  @@index([teamId])
+  @@index([teamId, type])
+}
+
+model AlertRule {
+  id            String @id @default(cuid())
+  monitorId     String
+  integrationId String
+  notifyAfter   Int    @default(1)
+
+  monitor     Monitor     @relation(fields: [monitorId], references: [id], onDelete: Cascade)
+  integration Integration @relation(fields: [integrationId], references: [id], onDelete: Cascade)
+
+  @@unique([monitorId, integrationId])
+  @@index([monitorId])
+  @@index([integrationId])
+}

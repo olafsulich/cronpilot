@@ -1,0 +1,27 @@
+{
+  "name": "@cronpilot/worker",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "tsx watch src/worker.ts",
+    "build": "tsc",
+    "start": "node dist/worker.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@cronpilot/db": "workspace:*",
+    "@cronpilot/emails": "workspace:*",
+    "@cronpilot/shared": "workspace:*",
+    "axios": "^1.7.2",
+    "bullmq": "^5.7.14",
+    "ioredis": "^5.4.1",
+    "pino": "^9.2.0",
+    "pino-pretty": "^11.2.1",
+    "resend": "^6.9.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "tsx": "^4.15.4",
+    "typescript": "^5.4.5"
+  }
+}
