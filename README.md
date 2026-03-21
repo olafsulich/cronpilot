@@ -44,4 +44,3 @@ Required env vars are documented in each app's README.
 - **Check-in**: an HTTP ping sent by a customer's job to signal successful execution.
 - **Alert**: fired when a check-in is late, missing, or explicitly failed.
 - **Team**: multi-tenant unit. Users belong to teams. Monitors belong to teams.
-# cronpilot-yt-demo
