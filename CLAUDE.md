@@ -95,3 +95,12 @@ Before opening a PR:
 3. Check for secrets, injection vulnerabilities, or unsafe patterns
 
 PR title follows the same conventional commit format. Body should explain _why_ the change is needed, not what changed. Link related issues with `closes #123`.
+
+## Reference docs
+
+Read these when relevant to the task at hand:
+
+- `docs/agent/environment.md` — all environment variables per app, with generation instructions
+- `docs/agent/api-routes.md` — full route list, auth patterns, request/response shape
+- `docs/agent/database.md` — Prisma schema, model relationships, encryption notes
+- `docs/agent/worker-queues.md` — BullMQ queues, processors, triggers, and scheduling
