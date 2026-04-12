@@ -1,5 +1,18 @@
 {
-  "enabledPlugins": {
-    "superpowers@claude-plugins-official": true
-  }
+	"enabledPlugins": {
+		"superpowers@claude-plugins-official": true
+	},
+	"hooks": {
+		"PostToolUse": [
+			{
+				"matcher": "Write|Edit",
+				"hooks": [
+					{
+						"type": "command",
+						"command": "pnpm run format || true"
+					}
+				]
+			}
+		]
+	}
 }
