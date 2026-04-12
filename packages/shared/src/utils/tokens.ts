@@ -1,4 +1,4 @@
-import crypto from 'crypto'
+import crypto from "node:crypto";
 
 /**
  * Generates a cryptographically secure 32-byte (64 hex char) ping token.
@@ -6,7 +6,7 @@ import crypto from 'crypto'
  * IMPORTANT: Never log these tokens.
  */
 export function generatePingToken(): string {
-  return crypto.randomBytes(32).toString('hex')
+	return crypto.randomBytes(32).toString("hex");
 }
 
 /**
@@ -15,7 +15,7 @@ export function generatePingToken(): string {
  * IMPORTANT: Never log these tokens.
  */
 export function generateInviteToken(): string {
-  return crypto.randomBytes(32).toString('hex')
+	return crypto.randomBytes(32).toString("hex");
 }
 
 /**
@@ -24,7 +24,7 @@ export function generateInviteToken(): string {
  * so that a DB breach does not expose valid tokens.
  */
 export function hashToken(token: string): string {
-  return crypto.createHash('sha256').update(token).digest('hex')
+	return crypto.createHash("sha256").update(token).digest("hex");
 }
 
 /**
@@ -32,8 +32,8 @@ export function hashToken(token: string): string {
  * Use when comparing tokens or hashes.
  */
 export function safeCompare(a: string, b: string): boolean {
-  if (a.length !== b.length) return false
-  const aBuf = Buffer.from(a)
-  const bBuf = Buffer.from(b)
-  return crypto.timingSafeEqual(aBuf, bBuf)
+	if (a.length !== b.length) return false;
+	const aBuf = Buffer.from(a);
+	const bBuf = Buffer.from(b);
+	return crypto.timingSafeEqual(aBuf, bBuf);
 }

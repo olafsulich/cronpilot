@@ -10,11 +10,11 @@
  *   pnpm --filter @cronpilot/emails preview
  */
 
-export { AlertMissedEmail } from './templates/alert-missed'
-export { AlertFailedEmail } from './templates/alert-failed'
-export { AlertResolvedEmail } from './templates/alert-resolved'
-export { DigestEmail } from './templates/digest'
-export { InviteEmail } from './templates/invite'
-export { MagicLinkEmail } from './templates/magic-link'
-export { TrialEndingEmail } from './templates/trial-ending'
-export { WelcomeEmail } from './templates/welcome'
+export { AlertFailedEmail } from "./templates/alert-failed";
+export { AlertMissedEmail } from "./templates/alert-missed";
+export { AlertResolvedEmail } from "./templates/alert-resolved";
+export { DigestEmail } from "./templates/digest";
+export { InviteEmail } from "./templates/invite";
+export { MagicLinkEmail } from "./templates/magic-link";
+export { TrialEndingEmail } from "./templates/trial-ending";
+export { WelcomeEmail } from "./templates/welcome";

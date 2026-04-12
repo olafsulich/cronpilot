@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation'
+import { redirect } from "next/navigation";
 
 export default function DashboardRootPage() {
-  redirect('/dashboard/monitors')
+	redirect("/dashboard/monitors");
 }

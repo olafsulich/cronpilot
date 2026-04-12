@@ -1,1 +1,1 @@
-export { prisma } from '@cronpilot/db'
+export { prisma } from "@cronpilot/db";

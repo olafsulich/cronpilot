@@ -1,19 +1,21 @@
 {
-  "name": "cronpilot",
-  "private": true,
-  "packageManager": "pnpm@9.0.0",
-  "scripts": {
-    "dev": "turbo run dev",
-    "build": "turbo run build",
-    "test": "turbo run test",
-    "db:migrate": "pnpm --filter @cronpilot/db migrate",
-    "db:push": "pnpm --filter @cronpilot/db push",
-    "db:studio": "pnpm --filter @cronpilot/db studio",
-    "db:seed": "pnpm --filter @cronpilot/db seed",
-    "db:reset": "pnpm --filter @cronpilot/db reset"
-  },
-  "devDependencies": {
-    "turbo": "latest",
-    "typescript": "^5.4.5"
-  }
+	"name": "cronpilot",
+	"private": true,
+	"packageManager": "pnpm@9.0.0",
+	"scripts": {
+		"dev": "turbo run dev",
+		"build": "turbo run build",
+		"test": "turbo run test",
+		"db:migrate": "pnpm --filter @cronpilot/db migrate",
+		"db:push": "pnpm --filter @cronpilot/db push",
+		"db:studio": "pnpm --filter @cronpilot/db studio",
+		"db:seed": "pnpm --filter @cronpilot/db seed",
+		"db:reset": "pnpm --filter @cronpilot/db reset",
+		"format": "biome check --write"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.4.11",
+		"turbo": "latest",
+		"typescript": "^5.4.5"
+	}
 }

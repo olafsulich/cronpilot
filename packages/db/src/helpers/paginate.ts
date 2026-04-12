@@ -8,9 +8,9 @@
  */
 
 export interface CursorPaginationArgs {
-  take: number
-  cursor?: { id: string }
-  skip?: number
+	take: number;
+	cursor?: { id: string };
+	skip?: number;
 }
 
 /**
@@ -18,21 +18,21 @@ export interface CursorPaginationArgs {
  * Fetches limit+1 records so we can detect whether there is a next page.
  */
 export function buildCursorPagination(
-  cursor?: string,
-  limit = 20,
+	cursor?: string,
+	limit = 20,
 ): CursorPaginationArgs {
-  return {
-    take: limit + 1,
-    ...(cursor !== undefined && cursor !== ''
-      ? { cursor: { id: cursor }, skip: 1 }
-      : {}),
-  }
+	return {
+		take: limit + 1,
+		...(cursor !== undefined && cursor !== ""
+			? { cursor: { id: cursor }, skip: 1 }
+			: {}),
+	};
 }
 
 export interface PaginatedResult<T> {
-  data: T[]
-  nextCursor: string | null
-  total?: number
+	data: T[];
+	nextCursor: string | null;
+	total?: number;
 }
 
 /**
@@ -42,14 +42,14 @@ export interface PaginatedResult<T> {
  * @param limit  The requested page size
  */
 export function formatPaginatedResult<T extends { id: string }>(
-  items: T[],
-  limit: number,
+	items: T[],
+	limit: number,
 ): PaginatedResult<T> {
-  const hasMore = items.length > limit
-  const data = hasMore ? items.slice(0, limit) : items
+	const hasMore = items.length > limit;
+	const data = hasMore ? items.slice(0, limit) : items;
 
-  const lastItem = data[data.length - 1]
-  const nextCursor = hasMore && lastItem !== undefined ? lastItem.id : null
+	const lastItem = data[data.length - 1];
+	const nextCursor = hasMore && lastItem !== undefined ? lastItem.id : null;
 
-  return { data, nextCursor }
+	return { data, nextCursor };
 }

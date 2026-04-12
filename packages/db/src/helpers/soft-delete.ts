@@ -1,4 +1,4 @@
-import type { PrismaClient } from '@prisma/client'
+import type { PrismaClient } from "@prisma/client";
 
 /**
  * Soft-delete pattern for Cronpilot.
@@ -33,14 +33,14 @@ import type { PrismaClient } from '@prisma/client'
  *   await prisma.someModel.findMany({ where: { ...withoutDeleted(), teamId } })
  */
 export function withoutDeleted(): { deletedAt: null } {
-  return { deletedAt: null }
+	return { deletedAt: null };
 }
 
 /**
  * Returns true if the given record has been soft-deleted.
  */
 export function isDeleted(record: { deletedAt: Date | null }): boolean {
-  return record.deletedAt !== null
+	return record.deletedAt !== null;
 }
 
 /**
@@ -55,19 +55,19 @@ export function isDeleted(record: { deletedAt: Date | null }): boolean {
  * only invoking this on models that declare `deletedAt DateTime?`.
  */
 export async function softDelete(
-  prisma: PrismaClient,
-  model: string,
-  id: string,
+	prisma: PrismaClient,
+	model: string,
+	id: string,
 ): Promise<void> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const delegate = (prisma as any)[model]
-  if (typeof delegate?.update !== 'function') {
-    throw new Error(`softDelete: unknown model "${model}"`)
-  }
-  await delegate.update({
-    where: { id },
-    data: { deletedAt: new Date() },
-  })
+	// biome-ignore lint/suspicious/noExplicitAny: dynamic model lookup requires any
+	const delegate = (prisma as any)[model];
+	if (typeof delegate?.update !== "function") {
+		throw new Error(`softDelete: unknown model "${model}"`);
+	}
+	await delegate.update({
+		where: { id },
+		data: { deletedAt: new Date() },
+	});
 }
 
 /**
@@ -78,17 +78,17 @@ export async function softDelete(
  * @param id      The record's ID
  */
 export async function softRestore(
-  prisma: PrismaClient,
-  model: string,
-  id: string,
+	prisma: PrismaClient,
+	model: string,
+	id: string,
 ): Promise<void> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const delegate = (prisma as any)[model]
-  if (typeof delegate?.update !== 'function') {
-    throw new Error(`softRestore: unknown model "${model}"`)
-  }
-  await delegate.update({
-    where: { id },
-    data: { deletedAt: null },
-  })
+	// biome-ignore lint/suspicious/noExplicitAny: dynamic model lookup requires any
+	const delegate = (prisma as any)[model];
+	if (typeof delegate?.update !== "function") {
+		throw new Error(`softRestore: unknown model "${model}"`);
+	}
+	await delegate.update({
+		where: { id },
+		data: { deletedAt: null },
+	});
 }
