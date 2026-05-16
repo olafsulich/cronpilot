@@ -17,15 +17,10 @@ export interface CursorPaginationArgs {
  * Builds Prisma findMany args for cursor-based pagination.
  * Fetches limit+1 records so we can detect whether there is a next page.
  */
-export function buildCursorPagination(
-	cursor?: string,
-	limit = 20,
-): CursorPaginationArgs {
+export function buildCursorPagination(cursor?: string, limit = 20): CursorPaginationArgs {
 	return {
 		take: limit + 1,
-		...(cursor !== undefined && cursor !== ""
-			? { cursor: { id: cursor }, skip: 1 }
-			: {}),
+		...(cursor !== undefined && cursor !== "" ? { cursor: { id: cursor }, skip: 1 } : {}),
 	};
 }
 

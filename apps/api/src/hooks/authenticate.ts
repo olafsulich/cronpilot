@@ -29,10 +29,7 @@ export interface JwtPayload {
 	exp?: number;
 }
 
-export async function authenticate(
-	request: FastifyRequest,
-	_reply: FastifyReply,
-): Promise<void> {
+export async function authenticate(request: FastifyRequest, _reply: FastifyReply): Promise<void> {
 	let payload: JwtPayload;
 	try {
 		payload = await request.jwtVerify<JwtPayload>();

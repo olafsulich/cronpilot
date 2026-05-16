@@ -12,9 +12,7 @@ export const metadata: Metadata = {
 	},
 	description:
 		"Never miss a cron job again. Monitor your scheduled tasks, get instant alerts, and keep your team informed.",
-	metadataBase: new URL(
-		process.env.NEXT_PUBLIC_APP_URL ?? "https://cronpilot.dev",
-	),
+	metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "https://cronpilot.dev"),
 	openGraph: {
 		title: "Cronpilot — Cron Job Monitoring",
 		description: "Never miss a cron job again.",
@@ -22,11 +20,7 @@ export const metadata: Metadata = {
 	},
 };
 
-export default function RootLayout({
-	children,
-}: {
-	children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body className={`${inter.variable} font-sans antialiased`}>

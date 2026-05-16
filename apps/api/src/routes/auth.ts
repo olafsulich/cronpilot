@@ -51,11 +51,7 @@ async function authPlugin(fastify: FastifyInstance): Promise<void> {
 
 		const existing = await prisma.user.findUnique({ where: { email } });
 		if (existing) {
-			throw new AppError(
-				"CONFLICT",
-				"An account with this email already exists",
-				409,
-			);
+			throw new AppError("CONFLICT", "An account with this email already exists", 409);
 		}
 
 		const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
@@ -205,11 +201,7 @@ async function authPlugin(fastify: FastifyInstance): Promise<void> {
 				secret: process.env.JWT_REFRESH_SECRET ?? "refresh-secret",
 			});
 		} catch {
-			throw new AppError(
-				"UNAUTHORIZED",
-				"Invalid or expired refresh token",
-				401,
-			);
+			throw new AppError("UNAUTHORIZED", "Invalid or expired refresh token", 401);
 		}
 
 		if (payload.type !== "refresh") {
@@ -234,25 +226,16 @@ async function authPlugin(fastify: FastifyInstance): Promise<void> {
 	});
 
 	// POST /auth/logout
-	fastify.post(
-		"/auth/logout",
-		{ preHandler: authenticate },
-		async (request, reply) => {
-			const body = RefreshSchema.safeParse(request.body);
-			if (body.success) {
-				const { refreshToken } = body.data;
-				// Add to blocklist until it naturally expires
-				await redis.set(
-					`blocklist:${refreshToken}`,
-					"1",
-					"EX",
-					REFRESH_TOKEN_TTL_SECONDS,
-				);
-			}
+	fastify.post("/auth/logout", { preHandler: authenticate }, async (request, reply) => {
+		const body = RefreshSchema.safeParse(request.body);
+		if (body.success) {
+			const { refreshToken } = body.data;
+			// Add to blocklist until it naturally expires
+			await redis.set(`blocklist:${refreshToken}`, "1", "EX", REFRESH_TOKEN_TTL_SECONDS);
+		}
 
-			return reply.send({ data: { ok: true } });
-		},
-	);
+		return reply.send({ data: { ok: true } });
+	});
 }
 
 export default fp(authPlugin, { name: "auth-routes" });

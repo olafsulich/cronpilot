@@ -32,16 +32,10 @@ export function getPlanLimits(plan: PlanName): PlanLimits {
 	return PLANS[plan];
 }
 
-export function isWithinMonitorLimit(
-	plan: PlanName,
-	currentCount: number,
-): boolean {
+export function isWithinMonitorLimit(plan: PlanName, currentCount: number): boolean {
 	return currentCount < PLANS[plan].monitorsLimit;
 }
 
-export function isWithinTeamMemberLimit(
-	plan: PlanName,
-	currentCount: number,
-): boolean {
+export function isWithinTeamMemberLimit(plan: PlanName, currentCount: number): boolean {
 	return currentCount < PLANS[plan].teamMembers;
 }

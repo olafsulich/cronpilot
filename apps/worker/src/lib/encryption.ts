@@ -7,9 +7,7 @@ function getKey(): Buffer {
 	if (!raw) throw new Error("ENCRYPTION_KEY env var is not set");
 	const key = Buffer.from(raw, "hex");
 	if (key.length !== 32) {
-		throw new Error(
-			"ENCRYPTION_KEY must be a 32-byte hex-encoded string (64 hex chars)",
-		);
+		throw new Error("ENCRYPTION_KEY must be a 32-byte hex-encoded string (64 hex chars)");
 	}
 	return key;
 }

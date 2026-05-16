@@ -4,11 +4,7 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import fp from "fastify-plugin";
 import { ZodError } from "zod";
 
-function errorHandler(
-	error: unknown,
-	_request: FastifyRequest,
-	reply: FastifyReply,
-): void {
+function errorHandler(error: unknown, _request: FastifyRequest, reply: FastifyReply): void {
 	// AppError — known application errors
 	if (error instanceof AppError) {
 		void reply.status(error.statusCode).send({
@@ -22,9 +18,7 @@ function errorHandler(
 
 	// Zod validation errors
 	if (error instanceof ZodError) {
-		const message = error.errors
-			.map((e) => `${e.path.join(".")}: ${e.message}`)
-			.join(", ");
+		const message = error.errors.map((e) => `${e.path.join(".")}: ${e.message}`).join(", ");
 		void reply.status(400).send({
 			error: {
 				code: "VALIDATION_ERROR",
@@ -67,9 +61,7 @@ function errorHandler(
 			error: {
 				code: "VALIDATION_ERROR",
 				message:
-					"message" in error
-						? String((error as { message: string }).message)
-						: "Invalid request",
+					"message" in error ? String((error as { message: string }).message) : "Invalid request",
 			},
 		});
 		return;

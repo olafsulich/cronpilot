@@ -18,11 +18,7 @@ export interface EmailConfig {
 	address: string;
 }
 
-export type IntegrationConfig =
-	| SlackConfig
-	| PagerDutyConfig
-	| WebhookConfig
-	| EmailConfig;
+export type IntegrationConfig = SlackConfig | PagerDutyConfig | WebhookConfig | EmailConfig;
 
 export interface Integration {
 	id: string;

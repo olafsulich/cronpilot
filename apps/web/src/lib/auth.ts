@@ -1,9 +1,5 @@
 import { AppError } from "@cronpilot/shared";
-import type {
-	GetServerSidePropsContext,
-	NextApiRequest,
-	NextApiResponse,
-} from "next";
+import type { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from "next";
 import { redirect } from "next/navigation";
 import {
 	type NextAuthOptions,
@@ -67,11 +63,7 @@ export const authOptions: NextAuthOptions = {
 			},
 			async authorize(credentials) {
 				if (!credentials?.email || !credentials.password) {
-					throw new AppError(
-						"INVALID_CREDENTIALS",
-						"Email and password are required",
-						400,
-					);
+					throw new AppError("INVALID_CREDENTIALS", "Email and password are required", 400);
 				}
 
 				const res = await fetch(`${getApiUrl()}/auth/login`, {
@@ -143,9 +135,7 @@ type SessionContext =
 	  }
 	| { req: NextApiRequest; res: NextApiResponse };
 
-export async function getServerSession(
-	ctx?: SessionContext,
-): Promise<Session | null> {
+export async function getServerSession(ctx?: SessionContext): Promise<Session | null> {
 	if (ctx) {
 		return nextAuthGetServerSession(ctx.req, ctx.res, authOptions);
 	}

@@ -27,9 +27,7 @@ export async function processCleanup(job: Job<CleanupJobData>): Promise<void> {
 	for (const team of teams) {
 		const planLimits = PLANS[team.plan];
 		const retentionDays = planLimits.checkinRetention;
-		const checkinCutoff = new Date(
-			now.getTime() - retentionDays * 24 * 60 * 60 * 1000,
-		);
+		const checkinCutoff = new Date(now.getTime() - retentionDays * 24 * 60 * 60 * 1000);
 
 		const monitors = await prisma.monitor.findMany({
 			where: { teamId: team.id },
@@ -57,17 +55,12 @@ export async function processCleanup(job: Job<CleanupJobData>): Promise<void> {
 				);
 			}
 		} catch (err) {
-			jobLog.error(
-				{ err, teamId: team.id },
-				"failed to delete check-in records for team",
-			);
+			jobLog.error({ err, teamId: team.id }, "failed to delete check-in records for team");
 		}
 	}
 
 	// Clean up resolved alerts older than the global retention window
-	const alertCutoff = new Date(
-		now.getTime() - RESOLVED_ALERT_RETENTION_DAYS * 24 * 60 * 60 * 1000,
-	);
+	const alertCutoff = new Date(now.getTime() - RESOLVED_ALERT_RETENTION_DAYS * 24 * 60 * 60 * 1000);
 
 	try {
 		const { count: alertsDeleted } = await prisma.alert.deleteMany({
@@ -89,8 +82,5 @@ export async function processCleanup(job: Job<CleanupJobData>): Promise<void> {
 		jobLog.error({ err }, "failed to delete old resolved alerts");
 	}
 
-	jobLog.info(
-		{ totalCheckinsDeleted, totalAlertsDeleted },
-		"cleanup run complete",
-	);
+	jobLog.info({ totalCheckinsDeleted, totalAlertsDeleted }, "cleanup run complete");
 }

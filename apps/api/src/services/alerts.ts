@@ -8,9 +8,7 @@ import { prisma } from "../lib/prisma";
 // Mapping
 // ---------------------------------------------------------------------------
 
-function mapAlert(
-	alert: Alert & { monitor?: { name: string } | null },
-): AlertResponse {
+function mapAlert(alert: Alert & { monitor?: { name: string } | null }): AlertResponse {
 	return {
 		id: alert.id,
 		monitorId: alert.monitorId,
@@ -75,10 +73,7 @@ export async function listAlerts(
 	};
 }
 
-export async function getAlert(
-	teamId: string,
-	alertId: string,
-): Promise<AlertResponse> {
+export async function getAlert(teamId: string, alertId: string): Promise<AlertResponse> {
 	const alert = await prisma.alert.findFirst({
 		where: { id: alertId, teamId },
 		include: { monitor: { select: { name: true } } },
@@ -89,10 +84,7 @@ export async function getAlert(
 	return mapAlert(alert);
 }
 
-export async function resolveAlert(
-	teamId: string,
-	alertId: string,
-): Promise<AlertResponse> {
+export async function resolveAlert(teamId: string, alertId: string): Promise<AlertResponse> {
 	const alert = await prisma.alert.findFirst({
 		where: { id: alertId, teamId },
 	});
@@ -112,10 +104,7 @@ export async function resolveAlert(
 	return mapAlert(updated);
 }
 
-export async function muteAlert(
-	teamId: string,
-	alertId: string,
-): Promise<AlertResponse> {
+export async function muteAlert(teamId: string, alertId: string): Promise<AlertResponse> {
 	const alert = await prisma.alert.findFirst({
 		where: { id: alertId, teamId },
 	});

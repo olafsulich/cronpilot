@@ -18,31 +18,19 @@ async function stripeWebhookPlugin(fastify: FastifyInstance): Promise<void> {
 		async (request, reply) => {
 			const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 			if (!webhookSecret) {
-				throw new AppError(
-					"INTERNAL_ERROR",
-					"Stripe webhook secret not configured",
-					500,
-				);
+				throw new AppError("INTERNAL_ERROR", "Stripe webhook secret not configured", 500);
 			}
 
 			const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 			if (!stripeSecretKey) {
-				throw new AppError(
-					"INTERNAL_ERROR",
-					"Stripe secret key not configured",
-					500,
-				);
+				throw new AppError("INTERNAL_ERROR", "Stripe secret key not configured", 500);
 			}
 
 			const stripe = new Stripe(stripeSecretKey, { apiVersion: "2024-06-20" });
 
 			const signature = request.headers["stripe-signature"];
 			if (!signature || typeof signature !== "string") {
-				throw new AppError(
-					"BAD_REQUEST",
-					"Missing stripe-signature header",
-					400,
-				);
+				throw new AppError("BAD_REQUEST", "Missing stripe-signature header", 400);
 			}
 
 			// Fastify does not expose rawBody by default — we need the raw buffer.
@@ -54,29 +42,17 @@ async function stripeWebhookPlugin(fastify: FastifyInstance): Promise<void> {
 
 			let event: Stripe.Event;
 			try {
-				event = stripe.webhooks.constructEvent(
-					rawBody,
-					signature,
-					webhookSecret,
-				);
+				event = stripe.webhooks.constructEvent(rawBody, signature, webhookSecret);
 			} catch (err) {
-				const message =
-					err instanceof Error ? err.message : "Signature verification failed";
-				throw new AppError(
-					"BAD_REQUEST",
-					`Webhook signature verification failed: ${message}`,
-					400,
-				);
+				const message = err instanceof Error ? err.message : "Signature verification failed";
+				throw new AppError("BAD_REQUEST", `Webhook signature verification failed: ${message}`, 400);
 			}
 
 			try {
 				await handleStripeEvent(event);
 			} catch (err) {
 				// Log but don't rethrow — Stripe will retry if we return non-2xx
-				fastify.log.error(
-					{ err, eventType: event.type },
-					"Failed to handle Stripe event",
-				);
+				fastify.log.error({ err, eventType: event.type }, "Failed to handle Stripe event");
 				return reply.status(500).send({
 					error: { code: "HANDLER_ERROR", message: "Event handler failed" },
 				});

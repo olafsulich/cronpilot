@@ -58,25 +58,16 @@ export default function NewMonitorPage() {
 	async function onSubmit(values: FormValues) {
 		setServerError(null);
 		try {
-			const monitor = await apiClient.post<MonitorResponse>(
-				"/monitors",
-				values,
-			);
+			const monitor = await apiClient.post<MonitorResponse>("/monitors", values);
 			router.push(`/dashboard/monitors/${monitor.id}`);
 		} catch (err: unknown) {
 			const error = err as { message?: string; code?: string };
 			if (error.code === "INVALID_CRON") {
-				setServerError(
-					"That cron expression is invalid. Please check the format.",
-				);
+				setServerError("That cron expression is invalid. Please check the format.");
 			} else if (error.code === "PLAN_LIMIT_REACHED") {
-				setServerError(
-					"You have reached your plan's monitor limit. Please upgrade to add more.",
-				);
+				setServerError("You have reached your plan's monitor limit. Please upgrade to add more.");
 			} else {
-				setServerError(
-					error.message ?? "Failed to create monitor. Please try again.",
-				);
+				setServerError(error.message ?? "Failed to create monitor. Please try again.");
 			}
 		}
 	}
@@ -85,10 +76,7 @@ export default function NewMonitorPage() {
 		<div className="max-w-2xl">
 			<div className="mb-8">
 				<nav className="text-sm text-gray-500 mb-2">
-					<Link
-						href="/dashboard/monitors"
-						className="hover:text-gray-700 transition-colors"
-					>
+					<Link href="/dashboard/monitors" className="hover:text-gray-700 transition-colors">
 						Monitors
 					</Link>
 					<span className="mx-2">/</span>
@@ -96,8 +84,7 @@ export default function NewMonitorPage() {
 				</nav>
 				<h1 className="text-2xl font-bold text-gray-900">Create monitor</h1>
 				<p className="text-gray-500 text-sm mt-1">
-					Define the expected schedule and we&apos;ll alert you when something
-					goes wrong.
+					Define the expected schedule and we&apos;ll alert you when something goes wrong.
 				</p>
 			</div>
 
@@ -108,17 +95,10 @@ export default function NewMonitorPage() {
 					</div>
 				)}
 
-				<form
-					onSubmit={handleSubmit(onSubmit)}
-					noValidate
-					className="space-y-6"
-				>
+				<form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-6">
 					{/* Name */}
 					<div>
-						<label
-							htmlFor="name"
-							className="block text-sm font-medium text-gray-700 mb-1.5"
-						>
+						<label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1.5">
 							Monitor name
 						</label>
 						<input
@@ -128,19 +108,12 @@ export default function NewMonitorPage() {
 							className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition"
 							placeholder="Nightly database backup"
 						/>
-						{errors.name && (
-							<p className="text-red-600 text-xs mt-1.5">
-								{errors.name.message}
-							</p>
-						)}
+						{errors.name && <p className="text-red-600 text-xs mt-1.5">{errors.name.message}</p>}
 					</div>
 
 					{/* Schedule */}
 					<div>
-						<label
-							htmlFor="schedule"
-							className="block text-sm font-medium text-gray-700 mb-1.5"
-						>
+						<label htmlFor="schedule" className="block text-sm font-medium text-gray-700 mb-1.5">
 							Cron schedule
 						</label>
 						<input
@@ -151,9 +124,7 @@ export default function NewMonitorPage() {
 							placeholder="0 2 * * *"
 						/>
 						{errors.schedule && (
-							<p className="text-red-600 text-xs mt-1.5">
-								{errors.schedule.message}
-							</p>
+							<p className="text-red-600 text-xs mt-1.5">{errors.schedule.message}</p>
 						)}
 						<div className="flex flex-wrap gap-1.5 mt-2">
 							{CRON_EXAMPLES.map((ex) => (
@@ -175,10 +146,7 @@ export default function NewMonitorPage() {
 
 					{/* Timezone */}
 					<div>
-						<label
-							htmlFor="timezone"
-							className="block text-sm font-medium text-gray-700 mb-1.5"
-						>
+						<label htmlFor="timezone" className="block text-sm font-medium text-gray-700 mb-1.5">
 							Timezone
 						</label>
 						<select
@@ -193,18 +161,13 @@ export default function NewMonitorPage() {
 							))}
 						</select>
 						{errors.timezone && (
-							<p className="text-red-600 text-xs mt-1.5">
-								{errors.timezone.message}
-							</p>
+							<p className="text-red-600 text-xs mt-1.5">{errors.timezone.message}</p>
 						)}
 					</div>
 
 					{/* Grace period */}
 					<div>
-						<label
-							htmlFor="gracePeriod"
-							className="block text-sm font-medium text-gray-700 mb-1.5"
-						>
+						<label htmlFor="gracePeriod" className="block text-sm font-medium text-gray-700 mb-1.5">
 							Grace period (seconds)
 						</label>
 						<input
@@ -217,13 +180,11 @@ export default function NewMonitorPage() {
 							placeholder="300"
 						/>
 						<p className="text-xs text-gray-400 mt-1.5">
-							How long after the expected run time before we alert you. Default:
-							300 seconds (5 min).
+							How long after the expected run time before we alert you. Default: 300 seconds (5
+							min).
 						</p>
 						{errors.gracePeriod && (
-							<p className="text-red-600 text-xs mt-1.5">
-								{errors.gracePeriod.message}
-							</p>
+							<p className="text-red-600 text-xs mt-1.5">{errors.gracePeriod.message}</p>
 						)}
 					</div>
 

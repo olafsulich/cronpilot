@@ -8,20 +8,13 @@ export interface InviteEmailProps {
 	expiresAt: Date;
 }
 
-export function InviteEmail({
-	inviterName,
-	teamName,
-	inviteUrl,
-	expiresAt,
-}: InviteEmailProps) {
+export function InviteEmail({ inviterName, teamName, inviteUrl, expiresAt }: InviteEmailProps) {
 	const campaign = "team-invite";
 	const inviteUrlWithUtm = appendUtm(inviteUrl, campaign);
 	const expiresAtStr = formatDateTime(expiresAt);
 
 	return (
-		<Layout
-			previewText={`${inviterName} invited you to join ${teamName} on Cronpilot`}
-		>
+		<Layout previewText={`${inviterName} invited you to join ${teamName} on Cronpilot`}>
 			{/* Avatar / Invite graphic */}
 			<div style={avatarContainerStyle}>
 				<div style={avatarStyle}>{inviterName.charAt(0).toUpperCase()}</div>
@@ -31,19 +24,17 @@ export function InviteEmail({
 				</div>
 			</div>
 
-			<Text style={headingStyle}>
-				You&rsquo;ve been invited to join {teamName}
+			<Text style={headingStyle}>You&rsquo;ve been invited to join {teamName}</Text>
+
+			<Text style={bodyTextStyle}>
+				<strong>{inviterName}</strong> has invited you to join the <strong>{teamName}</strong> team
+				on Cronpilot — a cron job monitoring platform that keeps your scheduled tasks running
+				reliably.
 			</Text>
 
 			<Text style={bodyTextStyle}>
-				<strong>{inviterName}</strong> has invited you to join the{" "}
-				<strong>{teamName}</strong> team on Cronpilot — a cron job monitoring
-				platform that keeps your scheduled tasks running reliably.
-			</Text>
-
-			<Text style={bodyTextStyle}>
-				Once you accept, you&rsquo;ll have access to the team&rsquo;s monitors,
-				incident history, and alert settings.
+				Once you accept, you&rsquo;ll have access to the team&rsquo;s monitors, incident history,
+				and alert settings.
 			</Text>
 
 			<div style={buttonWrapperStyle}>
@@ -55,19 +46,18 @@ export function InviteEmail({
 			{/* Expiry notice */}
 			<div style={expiryNoticeStyle}>
 				<Text style={expiryTextStyle}>
-					This invitation expires on <strong>{expiresAtStr}</strong>. If you
-					need a new invite, ask {inviterName} to resend it.
+					This invitation expires on <strong>{expiresAtStr}</strong>. If you need a new invite, ask{" "}
+					{inviterName} to resend it.
 				</Text>
 			</div>
 
 			<Text style={helpTextStyle}>
-				If you weren&rsquo;t expecting this invitation or don&rsquo;t recognize{" "}
-				{inviterName}, you can safely ignore this email.
+				If you weren&rsquo;t expecting this invitation or don&rsquo;t recognize {inviterName}, you
+				can safely ignore this email.
 			</Text>
 
 			<Text style={helpTextStyle}>
-				Having trouble with the button? Copy and paste this link into your
-				browser:
+				Having trouble with the button? Copy and paste this link into your browser:
 			</Text>
 			<Text style={rawLinkStyle}>{inviteUrlWithUtm}</Text>
 		</Layout>

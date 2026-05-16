@@ -48,10 +48,7 @@ function mapIntegration(integration: Integration): IntegrationResponse {
 		type: integration.type,
 		name: integration.name,
 		// Return the decrypted config with secrets partially masked
-		config: maskConfig(
-			integration.type,
-			decryptConfig(integration.encryptedConfig),
-		),
+		config: maskConfig(integration.type, decryptConfig(integration.encryptedConfig)),
 		createdAt: integration.createdAt.toISOString(),
 	};
 }
@@ -64,10 +61,7 @@ function decryptConfig(encrypted: string): Record<string, unknown> {
 	}
 }
 
-function maskConfig(
-	type: string,
-	config: Record<string, unknown>,
-): Record<string, unknown> {
+function maskConfig(type: string, config: Record<string, unknown>): Record<string, unknown> {
 	// Mask sensitive fields in the response
 	if (type === "slack") {
 		const url = String(config.webhookUrl ?? "");
@@ -80,8 +74,7 @@ function maskConfig(
 		const key = String(config.integrationKey ?? "");
 		return {
 			...config,
-			integrationKey:
-				key.length > 8 ? `${key.substring(0, 4)}...${key.slice(-4)}` : "***",
+			integrationKey: key.length > 8 ? `${key.substring(0, 4)}...${key.slice(-4)}` : "***",
 		};
 	}
 	if (type === "webhook") {
@@ -98,9 +91,7 @@ function maskConfig(
 // Service functions
 // ---------------------------------------------------------------------------
 
-export async function listIntegrations(
-	teamId: string,
-): Promise<IntegrationResponse[]> {
+export async function listIntegrations(teamId: string): Promise<IntegrationResponse[]> {
 	const integrations = await prisma.integration.findMany({
 		where: { teamId },
 		orderBy: { createdAt: "desc" },
@@ -142,10 +133,7 @@ function buildIntegrationName(input: CreateIntegrationInput): string {
 	}
 }
 
-export async function deleteIntegration(
-	teamId: string,
-	integrationId: string,
-): Promise<void> {
+export async function deleteIntegration(teamId: string, integrationId: string): Promise<void> {
 	const existing = await prisma.integration.findFirst({
 		where: { id: integrationId, teamId },
 	});

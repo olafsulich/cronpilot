@@ -76,18 +76,10 @@ async function checkinsPlugin(fastify: FastifyInstance): Promise<void> {
 		async (request, reply) => {
 			const pagination = ListCheckinsQuerySchema.safeParse(request.query);
 			if (!pagination.success) {
-				throw new AppError(
-					"VALIDATION_ERROR",
-					"Invalid pagination parameters",
-					400,
-				);
+				throw new AppError("VALIDATION_ERROR", "Invalid pagination parameters", 400);
 			}
 
-			const result = await listCheckins(
-				request.team.id,
-				request.params.monitorId,
-				pagination.data,
-			);
+			const result = await listCheckins(request.team.id, request.params.monitorId, pagination.data);
 
 			return reply.send(result);
 		},

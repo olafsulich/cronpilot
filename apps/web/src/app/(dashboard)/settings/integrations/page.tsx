@@ -3,17 +3,7 @@
 import type { Integration, IntegrationCreateParams } from "@cronpilot/shared";
 import { IntegrationCreateSchema } from "@cronpilot/shared";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-	Bell,
-	Globe,
-	Hash,
-	Loader2,
-	Mail,
-	Plus,
-	Shield,
-	Trash2,
-	X,
-} from "lucide-react";
+import { Bell, Globe, Hash, Loader2, Mail, Plus, Shield, Trash2, X } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import useSWR from "swr";
@@ -86,12 +76,9 @@ export default function IntegrationsPage() {
 			) : integrations.length === 0 ? (
 				<div className="text-center py-16 bg-white rounded-xl border border-gray-200 border-dashed">
 					<Bell className="h-10 w-10 text-gray-300 mx-auto mb-4" />
-					<h3 className="font-semibold text-gray-900 mb-1">
-						No integrations yet
-					</h3>
+					<h3 className="font-semibold text-gray-900 mb-1">No integrations yet</h3>
 					<p className="text-gray-500 text-sm mb-6">
-						Add Slack, PagerDuty, or a webhook to start receiving alert
-						notifications.
+						Add Slack, PagerDuty, or a webhook to start receiving alert notifications.
 					</p>
 					<button
 						type="button"
@@ -111,14 +98,10 @@ export default function IntegrationsPage() {
 						>
 							<div className="flex items-center gap-4">
 								<div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center text-gray-500">
-									{INTEGRATION_ICONS[integration.type] ?? (
-										<Bell className="h-5 w-5" />
-									)}
+									{INTEGRATION_ICONS[integration.type] ?? <Bell className="h-5 w-5" />}
 								</div>
 								<div>
-									<p className="font-medium text-gray-900 text-sm">
-										{integration.name}
-									</p>
+									<p className="font-medium text-gray-900 text-sm">{integration.name}</p>
 									<p className="text-xs text-gray-400">
 										{INTEGRATION_LABELS[integration.type]} &middot; Added{" "}
 										{formatDate(new Date(integration.createdAt))}
@@ -210,31 +193,23 @@ function AddIntegrationModal({
 				<div className="p-6">
 					{/* Type selector */}
 					<div className="grid grid-cols-4 gap-2 mb-6">
-						{(["slack", "pagerduty", "webhook", "email"] as const).map(
-							(type) => (
-								<button
-									key={type}
-									type="button"
-									onClick={() => handleTypeChange(type)}
-									className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border text-xs font-medium transition-colors ${
-										selectedType === type
-											? "border-orange-300 bg-orange-50 text-orange-600"
-											: "border-gray-200 text-gray-500 hover:border-gray-300 hover:text-gray-700"
-									}`}
-								>
-									<span
-										className={
-											selectedType === type
-												? "text-orange-500"
-												: "text-gray-400"
-										}
-									>
-										{INTEGRATION_ICONS[type]}
-									</span>
-									{INTEGRATION_LABELS[type]}
-								</button>
-							),
-						)}
+						{(["slack", "pagerduty", "webhook", "email"] as const).map((type) => (
+							<button
+								key={type}
+								type="button"
+								onClick={() => handleTypeChange(type)}
+								className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border text-xs font-medium transition-colors ${
+									selectedType === type
+										? "border-orange-300 bg-orange-50 text-orange-600"
+										: "border-gray-200 text-gray-500 hover:border-gray-300 hover:text-gray-700"
+								}`}
+							>
+								<span className={selectedType === type ? "text-orange-500" : "text-gray-400"}>
+									{INTEGRATION_ICONS[type]}
+								</span>
+								{INTEGRATION_LABELS[type]}
+							</button>
+						))}
 					</div>
 
 					{serverError && (
@@ -259,10 +234,7 @@ function AddIntegrationModal({
 							<>
 								<FormField
 									label="Webhook URL"
-									error={
-										(errors as { webhookUrl?: { message?: string } }).webhookUrl
-											?.message
-									}
+									error={(errors as { webhookUrl?: { message?: string } }).webhookUrl?.message}
 								>
 									<input
 										{...register("webhookUrl" as keyof IntegrationCreateParams)}
@@ -273,10 +245,7 @@ function AddIntegrationModal({
 								</FormField>
 								<FormField
 									label="Channel"
-									error={
-										(errors as { channel?: { message?: string } }).channel
-											?.message
-									}
+									error={(errors as { channel?: { message?: string } }).channel?.message}
 								>
 									<input
 										{...register("channel" as keyof IntegrationCreateParams)}
@@ -292,14 +261,11 @@ function AddIntegrationModal({
 							<FormField
 								label="Integration key"
 								error={
-									(errors as { integrationKey?: { message?: string } })
-										.integrationKey?.message
+									(errors as { integrationKey?: { message?: string } }).integrationKey?.message
 								}
 							>
 								<input
-									{...register(
-										"integrationKey" as keyof IntegrationCreateParams,
-									)}
+									{...register("integrationKey" as keyof IntegrationCreateParams)}
 									type="text"
 									className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition"
 									placeholder="abc123..."
@@ -311,9 +277,7 @@ function AddIntegrationModal({
 							<>
 								<FormField
 									label="URL"
-									error={
-										(errors as { url?: { message?: string } }).url?.message
-									}
+									error={(errors as { url?: { message?: string } }).url?.message}
 								>
 									<input
 										{...register("url" as keyof IntegrationCreateParams)}
@@ -324,10 +288,7 @@ function AddIntegrationModal({
 								</FormField>
 								<FormField
 									label="Signing secret"
-									error={
-										(errors as { secret?: { message?: string } }).secret
-											?.message
-									}
+									error={(errors as { secret?: { message?: string } }).secret?.message}
 								>
 									<input
 										{...register("secret" as keyof IntegrationCreateParams)}
@@ -342,10 +303,7 @@ function AddIntegrationModal({
 						{selectedType === "email" && (
 							<FormField
 								label="Email address"
-								error={
-									(errors as { address?: { message?: string } }).address
-										?.message
-								}
+								error={(errors as { address?: { message?: string } }).address?.message}
 							>
 								<input
 									{...register("address" as keyof IntegrationCreateParams)}
@@ -393,10 +351,7 @@ function FormField({
 }) {
 	return (
 		<div>
-			<label
-				htmlFor={htmlFor}
-				className="block text-sm font-medium text-gray-700 mb-1.5"
-			>
+			<label htmlFor={htmlFor} className="block text-sm font-medium text-gray-700 mb-1.5">
 				{label}
 			</label>
 			{children}

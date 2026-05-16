@@ -81,9 +81,7 @@ export function MonitorActions({ monitor }: { monitor: MonitorResponse }) {
 						disabled={loading === "delete"}
 						className="flex items-center gap-1 px-3 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 disabled:opacity-50 transition-colors"
 					>
-						{loading === "delete" && (
-							<Loader2 className="h-3.5 w-3.5 animate-spin" />
-						)}
+						{loading === "delete" && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
 						Delete
 					</button>
 					<button

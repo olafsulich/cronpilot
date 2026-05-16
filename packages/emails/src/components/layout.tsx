@@ -38,23 +38,16 @@ export function Layout({ children, previewText }: LayoutProps) {
 					<Section style={footerSectionStyle}>
 						<Text style={footerTextStyle}>
 							{"© 2026 Cronpilot · "}
-							<Link
-								href={`https://cronpilot.io/unsubscribe?${UTM_PARAMS}`}
-								style={footerLinkStyle}
-							>
+							<Link href={`https://cronpilot.io/unsubscribe?${UTM_PARAMS}`} style={footerLinkStyle}>
 								Unsubscribe
 							</Link>
 							{" · "}
-							<Link
-								href={`https://cronpilot.io/privacy?${UTM_PARAMS}`}
-								style={footerLinkStyle}
-							>
+							<Link href={`https://cronpilot.io/privacy?${UTM_PARAMS}`} style={footerLinkStyle}>
 								Privacy Policy
 							</Link>
 						</Text>
 						<Text style={footerAddressStyle}>
-							Cronpilot Inc. · 340 Pine Street, Suite 800 · San Francisco, CA
-							94104
+							Cronpilot Inc. · 340 Pine Street, Suite 800 · San Francisco, CA 94104
 						</Text>
 					</Section>
 				</Container>

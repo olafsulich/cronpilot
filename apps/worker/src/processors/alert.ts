@@ -1,10 +1,6 @@
 import { createHmac } from "node:crypto";
 import { prisma } from "@cronpilot/db";
-import {
-	AlertFailedEmail,
-	AlertMissedEmail,
-	renderEmail,
-} from "@cronpilot/emails";
+import { AlertFailedEmail, AlertMissedEmail, renderEmail } from "@cronpilot/emails";
 import type {
 	AlertJobData,
 	EmailConfig,
@@ -82,8 +78,7 @@ export async function processAlert(job: Job<AlertJobData>): Promise<void> {
 
 	for (const rule of monitor.alertRules) {
 		// Deduplication: notify on first failure, then on every Nth failure
-		const shouldNotify =
-			failureCount === 1 || failureCount % rule.notifyAfter === 0;
+		const shouldNotify = failureCount === 1 || failureCount % rule.notifyAfter === 0;
 		if (!shouldNotify) {
 			jobLog.debug(
 				{
@@ -181,8 +176,7 @@ async function dispatchSlack(
 	jobLog: ReturnType<typeof logger.child>,
 ): Promise<void> {
 	const emoji = alertType === "missed" ? "⏰" : "❌";
-	const verb =
-		alertType === "missed" ? "hasn't checked in" : "reported a failure";
+	const verb = alertType === "missed" ? "hasn't checked in" : "reported a failure";
 	const suffix = failureCount > 1 ? ` (failure #${failureCount})` : "";
 
 	const payload = {
@@ -276,9 +270,7 @@ async function dispatchWebhook(
 		timestamp: new Date().toISOString(),
 	});
 
-	const signature = createHmac("sha256", config.secret)
-		.update(body)
-		.digest("hex");
+	const signature = createHmac("sha256", config.secret).update(body).digest("hex");
 
 	jobLog.debug({ url: config.url }, "posting to webhook");
 	await axios.post(config.url, body, {
@@ -298,8 +290,7 @@ async function dispatchEmail(
 	dashboardUrl: string,
 	jobLog: ReturnType<typeof logger.child>,
 ): Promise<void> {
-	const EmailTemplate =
-		alertType === "missed" ? AlertMissedEmail : AlertFailedEmail;
+	const EmailTemplate = alertType === "missed" ? AlertMissedEmail : AlertFailedEmail;
 	const subject =
 		alertType === "missed"
 			? `Your job "${monitorName}" hasn't checked in`

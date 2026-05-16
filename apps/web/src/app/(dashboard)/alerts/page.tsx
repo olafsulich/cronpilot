@@ -100,10 +100,7 @@ export default function AlertsPage() {
 						</thead>
 						<tbody className="divide-y divide-gray-50">
 							{alerts.map((alert) => (
-								<tr
-									key={alert.id}
-									className="hover:bg-gray-50 transition-colors"
-								>
+								<tr key={alert.id} className="hover:bg-gray-50 transition-colors">
 									<td className="px-5 py-3 text-sm font-medium text-gray-900">
 										{alert.monitorName}
 									</td>
@@ -113,9 +110,7 @@ export default function AlertsPage() {
 											{alert.type}
 										</span>
 									</td>
-									<td className="px-5 py-3 text-sm text-gray-700">
-										{alert.failureCount}
-									</td>
+									<td className="px-5 py-3 text-sm text-gray-700">{alert.failureCount}</td>
 									<td className="px-5 py-3 text-sm text-gray-500">
 										<span title={formatDate(new Date(alert.openedAt))}>
 											{relativeTime(new Date(alert.openedAt))}

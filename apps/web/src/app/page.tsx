@@ -1,12 +1,4 @@
-import {
-	Activity,
-	ArrowRight,
-	Bell,
-	CheckCircle,
-	Shield,
-	Users,
-	Zap,
-} from "lucide-react";
+import { Activity, ArrowRight, Bell, CheckCircle, Shield, Users, Zap } from "lucide-react";
 import Link from "next/link";
 
 export default function LandingPage() {
@@ -17,9 +9,7 @@ export default function LandingPage() {
 				<div className="container mx-auto px-4 h-16 flex items-center justify-between">
 					<div className="flex items-center gap-2">
 						<Activity className="h-6 w-6 text-orange-500" />
-						<span className="text-lg font-semibold text-gray-900">
-							Cronpilot
-						</span>
+						<span className="text-lg font-semibold text-gray-900">Cronpilot</span>
 					</div>
 					<div className="flex items-center gap-4">
 						<Link
@@ -49,9 +39,8 @@ export default function LandingPage() {
 						Never miss a cron job again
 					</h1>
 					<p className="text-xl text-gray-500 mb-10 leading-relaxed">
-						Instrument your scheduled tasks with a single HTTP ping. Cronpilot
-						tracks execution windows, detects failures and missed runs, and
-						alerts your team before customers notice.
+						Instrument your scheduled tasks with a single HTTP ping. Cronpilot tracks execution
+						windows, detects failures and missed runs, and alerts your team before customers notice.
 					</p>
 					<div className="flex items-center justify-center gap-4">
 						<Link
@@ -104,8 +93,8 @@ export default function LandingPage() {
 							Everything you need, nothing you don&apos;t
 						</h2>
 						<p className="text-gray-500 text-lg">
-							Built for engineers who care about reliability but don&apos;t want
-							another complex tool to manage.
+							Built for engineers who care about reliability but don&apos;t want another complex
+							tool to manage.
 						</p>
 					</div>
 					<div className="grid md:grid-cols-3 gap-8">
@@ -147,12 +136,8 @@ export default function LandingPage() {
 			<section className="py-24 px-4 bg-orange-50">
 				<div className="container mx-auto max-w-5xl">
 					<div className="text-center mb-16">
-						<h2 className="text-3xl font-bold text-gray-900 mb-4">
-							Simple, honest pricing
-						</h2>
-						<p className="text-gray-500 text-lg">
-							Start free. Upgrade when you need more.
-						</p>
+						<h2 className="text-3xl font-bold text-gray-900 mb-4">Simple, honest pricing</h2>
+						<p className="text-gray-500 text-lg">Start free. Upgrade when you need more.</p>
 					</div>
 					<div className="grid md:grid-cols-3 gap-8">
 						<PricingCard
@@ -160,12 +145,7 @@ export default function LandingPage() {
 							price="$0"
 							period="forever"
 							description="For individuals and side projects"
-							features={[
-								"3 monitors",
-								"7-day check-in history",
-								"Email alerts",
-								"1 team member",
-							]}
+							features={["3 monitors", "7-day check-in history", "Email alerts", "1 team member"]}
 							cta="Get started"
 							ctaHref="/signup"
 							highlighted={false}
@@ -211,21 +191,13 @@ export default function LandingPage() {
 				<div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
 					<div className="flex items-center gap-2 text-gray-500">
 						<Activity className="h-4 w-4" />
-						<span className="text-sm">
-							Cronpilot &copy; {new Date().getFullYear()}
-						</span>
+						<span className="text-sm">Cronpilot &copy; {new Date().getFullYear()}</span>
 					</div>
 					<div className="flex items-center gap-6 text-sm text-gray-500">
-						<Link
-							href="/privacy"
-							className="hover:text-gray-900 transition-colors"
-						>
+						<Link href="/privacy" className="hover:text-gray-900 transition-colors">
 							Privacy
 						</Link>
-						<Link
-							href="/terms"
-							className="hover:text-gray-900 transition-colors"
-						>
+						<Link href="/terms" className="hover:text-gray-900 transition-colors">
 							Terms
 						</Link>
 						<Link
@@ -295,20 +267,14 @@ function PricingCard({
 					{name}
 				</h3>
 				<div className="flex items-baseline gap-1 mb-2">
-					<span
-						className={`text-4xl font-bold ${highlighted ? "text-white" : "text-gray-900"}`}
-					>
+					<span className={`text-4xl font-bold ${highlighted ? "text-white" : "text-gray-900"}`}>
 						{price}
 					</span>
-					<span
-						className={`text-sm ${highlighted ? "text-orange-100" : "text-gray-500"}`}
-					>
+					<span className={`text-sm ${highlighted ? "text-orange-100" : "text-gray-500"}`}>
 						/{period}
 					</span>
 				</div>
-				<p
-					className={`text-sm ${highlighted ? "text-orange-100" : "text-gray-500"}`}
-				>
+				<p className={`text-sm ${highlighted ? "text-orange-100" : "text-gray-500"}`}>
 					{description}
 				</p>
 			</div>
@@ -319,9 +285,7 @@ function PricingCard({
 						<CheckCircle
 							className={`h-4 w-4 flex-shrink-0 ${highlighted ? "text-orange-200" : "text-green-500"}`}
 						/>
-						<span className={highlighted ? "text-orange-50" : "text-gray-700"}>
-							{feature}
-						</span>
+						<span className={highlighted ? "text-orange-50" : "text-gray-700"}>{feature}</span>
 					</li>
 				))}
 			</ul>

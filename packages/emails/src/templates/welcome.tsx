@@ -8,12 +8,7 @@ export interface WelcomeEmailProps {
 	docsUrl: string;
 }
 
-export function WelcomeEmail({
-	userName,
-	teamName,
-	dashboardUrl,
-	docsUrl,
-}: WelcomeEmailProps) {
+export function WelcomeEmail({ userName, teamName, dashboardUrl, docsUrl }: WelcomeEmailProps) {
 	const campaign = "welcome";
 	const dashboardUrlWithUtm = appendUtm(dashboardUrl, campaign);
 	const docsUrlWithUtm = appendUtm(docsUrl, campaign);
@@ -27,9 +22,8 @@ export function WelcomeEmail({
 			<Text style={bodyTextStyle}>Hi {userName},</Text>
 
 			<Text style={bodyTextStyle}>
-				You&rsquo;re all set. <strong>{teamName}</strong> is now on Cronpilot —
-				the easiest way to monitor your cron jobs and get alerted the moment
-				something goes wrong.
+				You&rsquo;re all set. <strong>{teamName}</strong> is now on Cronpilot — the easiest way to
+				monitor your cron jobs and get alerted the moment something goes wrong.
 			</Text>
 
 			{/* Quick start steps */}
@@ -41,8 +35,8 @@ export function WelcomeEmail({
 					<div style={stepContentStyle}>
 						<div style={stepTitleStyle}>Create a monitor</div>
 						<div style={stepDescStyle}>
-							Define your cron job with its schedule and give it a name. You can
-							add as many monitors as you need.
+							Define your cron job with its schedule and give it a name. You can add as many
+							monitors as you need.
 						</div>
 					</div>
 				</div>
@@ -52,9 +46,8 @@ export function WelcomeEmail({
 					<div style={stepContentStyle}>
 						<div style={stepTitleStyle}>Add the ping URL to your cron job</div>
 						<div style={stepDescStyle}>
-							Each monitor gets a unique ping URL. Append a{" "}
-							<code style={codeStyle}>curl</code> call to the end of your cron
-							script to tell Cronpilot it ran successfully.
+							Each monitor gets a unique ping URL. Append a <code style={codeStyle}>curl</code> call
+							to the end of your cron script to tell Cronpilot it ran successfully.
 						</div>
 					</div>
 				</div>
@@ -64,8 +57,8 @@ export function WelcomeEmail({
 					<div style={stepContentStyle}>
 						<div style={stepTitleStyle}>Set up alerts</div>
 						<div style={stepDescStyle}>
-							Configure who gets notified and how (email, Slack, SMS) when a job
-							misses its check-in or reports a failure.
+							Configure who gets notified and how (email, Slack, SMS) when a job misses its check-in
+							or reports a failure.
 						</div>
 					</div>
 				</div>
@@ -77,15 +70,12 @@ export function WelcomeEmail({
 				<code style={codeBlockTextStyle}>
 					{"# Your existing cron job command, followed by:"}
 					<br />
-					{
-						"curl -fsS --retry 3 https://ping.cronpilot.io/your-token > /dev/null"
-					}
+					{"curl -fsS --retry 3 https://ping.cronpilot.io/your-token > /dev/null"}
 				</code>
 			</div>
 			<Text style={snippetNoteStyle}>
-				The <code style={inlineCodeStyle}>-fsS --retry 3</code> flags ensure the
-				ping is retried on network errors and doesn&rsquo;t produce noise in
-				your cron logs.
+				The <code style={inlineCodeStyle}>-fsS --retry 3</code> flags ensure the ping is retried on
+				network errors and doesn&rsquo;t produce noise in your cron logs.
 			</Text>
 
 			{/* CTA buttons */}
@@ -102,10 +92,9 @@ export function WelcomeEmail({
 			<div style={whatToExpectCardStyle}>
 				<Text style={whatToExpectHeadingStyle}>What to expect</Text>
 				<Text style={whatToExpectTextStyle}>
-					You&rsquo;ll receive an alert email when a monitor misses a check-in
-					or reports failure, and a follow-up when it recovers. Every Monday
-					you&rsquo;ll get a weekly digest summarizing your monitors&rsquo;
-					uptime and any incidents.
+					You&rsquo;ll receive an alert email when a monitor misses a check-in or reports failure,
+					and a follow-up when it recovers. Every Monday you&rsquo;ll get a weekly digest
+					summarizing your monitors&rsquo; uptime and any incidents.
 				</Text>
 			</div>
 
@@ -308,5 +297,4 @@ const linkStyle: React.CSSProperties = {
 	textDecoration: "underline",
 };
 
-WelcomeEmail.subject = (props: WelcomeEmailProps) =>
-	`Welcome to Cronpilot, ${props.userName}!`;
+WelcomeEmail.subject = (props: WelcomeEmailProps) => `Welcome to Cronpilot, ${props.userName}!`;

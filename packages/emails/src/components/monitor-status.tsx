@@ -27,9 +27,7 @@ export function MonitorStatus({ name, status, uptime }: MonitorStatusProps) {
 			<span style={nameStyle}>{name}</span>
 
 			{/* Status badge */}
-			<span style={badgeStyle(config.color, config.bgColor)}>
-				{config.label}
-			</span>
+			<span style={badgeStyle(config.color, config.bgColor)}>{config.label}</span>
 
 			{/* Uptime */}
 			<span style={uptimeStyle(config.color)}>{uptimeDisplay}</span>

@@ -6,10 +6,7 @@ export interface MagicLinkEmailProps {
 	expiresInMinutes: number;
 }
 
-export function MagicLinkEmail({
-	magicLinkUrl,
-	expiresInMinutes,
-}: MagicLinkEmailProps) {
+export function MagicLinkEmail({ magicLinkUrl, expiresInMinutes }: MagicLinkEmailProps) {
 	const campaign = "magic-link";
 	const magicLinkUrlWithUtm = appendUtm(magicLinkUrl, campaign);
 
@@ -44,26 +41,23 @@ export function MagicLinkEmail({
 				<div style={expiryRowStyle}>
 					<span style={expiryIconStyle}>⏱</span>
 					<Text style={expiryTextStyle}>
-						This link expires in <strong>{expiryLabel}</strong> and can only be
-						used once.
+						This link expires in <strong>{expiryLabel}</strong> and can only be used once.
 					</Text>
 				</div>
 			</div>
 
 			<Text style={securityNoteStyle}>
-				If you didn&rsquo;t request this login link, you can safely ignore this
-				email. Someone may have entered your email address by mistake.
+				If you didn&rsquo;t request this login link, you can safely ignore this email. Someone may
+				have entered your email address by mistake.
 			</Text>
 
 			<Text style={helpTextStyle}>
-				Having trouble with the button? Copy and paste this link into your
-				browser:
+				Having trouble with the button? Copy and paste this link into your browser:
 			</Text>
 			<Text style={rawLinkStyle}>{magicLinkUrlWithUtm}</Text>
 
 			<Text style={supportTextStyle}>
-				For security, never share this link with anyone. Cronpilot will never
-				ask you for it.
+				For security, never share this link with anyone. Cronpilot will never ask you for it.
 			</Text>
 		</Layout>
 	);

@@ -11,13 +11,9 @@ interface PageProps {
 	params: { id: string };
 }
 
-export async function generateMetadata({
-	params,
-}: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
 	try {
-		const monitor = await serverFetch<MonitorResponse>(
-			`/monitors/${params.id}`,
-		);
+		const monitor = await serverFetch<MonitorResponse>(`/monitors/${params.id}`);
 		return { title: monitor.name };
 	} catch {
 		return { title: "Monitor" };
@@ -36,12 +32,8 @@ export default async function MonitorDetailPage({ params }: PageProps) {
 	}
 
 	try {
-		checkins = await serverFetch<Checkin[]>(
-			`/monitors/${params.id}/checkins?limit=50`,
-		);
-		openAlerts = await serverFetch<Alert[]>(
-			`/monitors/${params.id}/alerts?status=open`,
-		);
+		checkins = await serverFetch<Checkin[]>(`/monitors/${params.id}/checkins?limit=50`);
+		openAlerts = await serverFetch<Alert[]>(`/monitors/${params.id}/alerts?status=open`);
 	} catch {
 		// Non-fatal — show what we have
 	}
@@ -58,13 +50,9 @@ export default async function MonitorDetailPage({ params }: PageProps) {
 						<StatusBadge status={monitor.computedStatus} />
 					</div>
 					<div className="flex items-center gap-4 text-sm text-gray-500">
-						<span className="font-mono bg-gray-100 px-2 py-0.5 rounded">
-							{monitor.schedule}
-						</span>
+						<span className="font-mono bg-gray-100 px-2 py-0.5 rounded">{monitor.schedule}</span>
 						<span>{monitor.timezone}</span>
-						<span>
-							Grace period: {formatDuration(monitor.gracePeriod * 1000)}
-						</span>
+						<span>Grace period: {formatDuration(monitor.gracePeriod * 1000)}</span>
 					</div>
 				</div>
 				<MonitorActions monitor={monitor} />
@@ -74,8 +62,8 @@ export default async function MonitorDetailPage({ params }: PageProps) {
 			<div className="bg-white rounded-xl border border-gray-200 p-5 mb-6">
 				<h2 className="text-sm font-semibold text-gray-900 mb-3">Ping URL</h2>
 				<p className="text-xs text-gray-500 mb-3">
-					Add this URL to the end of your cron command. A GET or POST request
-					signals a successful run.
+					Add this URL to the end of your cron command. A GET or POST request signals a successful
+					run.
 				</p>
 				<PingUrlDisplay url={pingUrl} />
 			</div>
@@ -88,14 +76,9 @@ export default async function MonitorDetailPage({ params }: PageProps) {
 					</h2>
 					<div className="space-y-2">
 						{openAlerts.map((alert) => (
-							<div
-								key={alert.id}
-								className="flex items-center justify-between text-sm"
-							>
+							<div key={alert.id} className="flex items-center justify-between text-sm">
 								<div className="flex items-center gap-3">
-									<span className="capitalize text-red-700 font-medium">
-										{alert.type}
-									</span>
+									<span className="capitalize text-red-700 font-medium">{alert.type}</span>
 									<span className="text-red-600">
 										{alert.failureCount} failure
 										{alert.failureCount > 1 ? "s" : ""}
@@ -114,11 +97,7 @@ export default async function MonitorDetailPage({ params }: PageProps) {
 			<div className="grid grid-cols-3 gap-4 mb-6">
 				<StatCard
 					label="Last check-in"
-					value={
-						monitor.lastCheckinAt
-							? relativeTime(new Date(monitor.lastCheckinAt))
-							: "—"
-					}
+					value={monitor.lastCheckinAt ? relativeTime(new Date(monitor.lastCheckinAt)) : "—"}
 				/>
 				<StatCard
 					label="Total check-ins"
@@ -134,14 +113,10 @@ export default async function MonitorDetailPage({ params }: PageProps) {
 			{/* Check-in history */}
 			<div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
 				<div className="px-5 py-4 border-b border-gray-100">
-					<h2 className="font-semibold text-gray-900 text-sm">
-						Check-in history
-					</h2>
+					<h2 className="font-semibold text-gray-900 text-sm">Check-in history</h2>
 				</div>
 				{checkins.length === 0 ? (
-					<div className="py-12 text-center text-gray-400 text-sm">
-						No check-ins recorded yet.
-					</div>
+					<div className="py-12 text-center text-gray-400 text-sm">No check-ins recorded yet.</div>
 				) : (
 					<table className="w-full">
 						<thead>
@@ -154,17 +129,12 @@ export default async function MonitorDetailPage({ params }: PageProps) {
 						</thead>
 						<tbody className="divide-y divide-gray-50">
 							{checkins.map((checkin) => (
-								<tr
-									key={checkin.id}
-									className="hover:bg-gray-50 transition-colors"
-								>
+								<tr key={checkin.id} className="hover:bg-gray-50 transition-colors">
 									<td className="px-5 py-3 text-sm text-gray-700">
 										{formatDate(new Date(checkin.receivedAt))}
 									</td>
 									<td className="px-5 py-3 text-sm text-gray-700 font-mono">
-										{checkin.duration !== null
-											? formatDuration(checkin.duration)
-											: "—"}
+										{checkin.duration !== null ? formatDuration(checkin.duration) : "—"}
 									</td>
 									<td className="px-5 py-3">
 										<span
@@ -202,11 +172,7 @@ function StatCard({
 	return (
 		<div className="bg-white rounded-xl border border-gray-200 p-4">
 			<p className="text-xs text-gray-500 mb-1">{label}</p>
-			<p
-				className={`text-lg font-semibold text-gray-900 ${valueClassName ?? ""}`}
-			>
-				{value}
-			</p>
+			<p className={`text-lg font-semibold text-gray-900 ${valueClassName ?? ""}`}>{value}</p>
 		</div>
 	);
 }

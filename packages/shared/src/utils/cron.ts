@@ -56,9 +56,7 @@ interface MonitorStatusInput {
 	status: MonitorDbStatus;
 }
 
-export function computeMonitorStatus(
-	monitor: MonitorStatusInput,
-): MonitorStatus {
+export function computeMonitorStatus(monitor: MonitorStatusInput): MonitorStatus {
 	if (monitor.status === "paused") {
 		return "paused";
 	}
@@ -76,11 +74,7 @@ export function computeMonitorStatus(
 
 	let windowClose: Date;
 	try {
-		windowClose = getNextWindowClose(
-			monitor.schedule,
-			monitor.timezone,
-			monitor.gracePeriod,
-		);
+		windowClose = getNextWindowClose(monitor.schedule, monitor.timezone, monitor.gracePeriod);
 	} catch {
 		return "healthy";
 	}
@@ -90,9 +84,7 @@ export function computeMonitorStatus(
 	}
 
 	// Late window: up to 2x the grace period after the window closes
-	const lateDeadline = new Date(
-		windowClose.getTime() + monitor.gracePeriod * 2 * 1000,
-	);
+	const lateDeadline = new Date(windowClose.getTime() + monitor.gracePeriod * 2 * 1000);
 	if (now <= lateDeadline) {
 		return "late";
 	}

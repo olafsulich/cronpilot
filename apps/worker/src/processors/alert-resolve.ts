@@ -21,9 +21,7 @@ const APP_URL = process.env.APP_URL ?? "http://localhost:3000";
  * Resolves an open alert when a check-in resumes after a missed/failed period.
  * Sends resolution notifications to all configured integrations.
  */
-export async function processAlertResolve(
-	job: Job<AlertResolveJobData>,
-): Promise<void> {
+export async function processAlertResolve(job: Job<AlertResolveJobData>): Promise<void> {
 	const { monitorId, alertId } = job.data;
 	const jobLog = logger.child({
 		jobId: job.id,
@@ -110,12 +108,7 @@ export async function processAlertResolve(
 					);
 					break;
 				case "pagerduty":
-					await resolvePagerDuty(
-						config as PagerDutyConfig,
-						monitor.name,
-						monitorId,
-						jobLog,
-					);
+					await resolvePagerDuty(config as PagerDutyConfig, monitor.name, monitorId, jobLog);
 					break;
 				case "webhook":
 					await resolveWebhook(
@@ -243,9 +236,7 @@ async function resolveWebhook(
 		timestamp: new Date().toISOString(),
 	});
 
-	const signature = createHmac("sha256", config.secret)
-		.update(body)
-		.digest("hex");
+	const signature = createHmac("sha256", config.secret).update(body).digest("hex");
 
 	jobLog.debug({ url: config.url }, "posting resolution to webhook");
 	await axios.post(config.url, body, {

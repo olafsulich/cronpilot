@@ -9,11 +9,7 @@ import { redis } from "../lib/redis";
  * that is close enough to a sliding window for these use-cases and requires no
  * Lua scripting or sorted sets.
  */
-async function checkRateLimit(
-	key: string,
-	limit: number,
-	windowSecs: number,
-): Promise<void> {
+async function checkRateLimit(key: string, limit: number, windowSecs: number): Promise<void> {
 	const multi = redis.multi();
 	multi.incr(key);
 	multi.expire(key, windowSecs);
@@ -60,10 +56,7 @@ export async function rateLimitCheckin(
  * 300 requests per minute per teamId.
  * Falls back to IP if team is not yet attached to the request.
  */
-export async function rateLimitApi(
-	request: FastifyRequest,
-	_reply: FastifyReply,
-): Promise<void> {
+export async function rateLimitApi(request: FastifyRequest, _reply: FastifyReply): Promise<void> {
 	const teamId = request.team?.id ?? `ip:${request.ip}`;
 	const key = `rl:api:${teamId}:${Math.floor(Date.now() / 60_000)}`;
 	await checkRateLimit(key, 300, 60);

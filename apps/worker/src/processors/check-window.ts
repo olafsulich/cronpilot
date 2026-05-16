@@ -10,9 +10,7 @@ import { alertQueue, checkWindowQueue } from "../lib/queues.js";
  * monitor has closed without a successful ping arriving. Guards against races by
  * re-checking the database before creating an alert.
  */
-export async function processCheckWindow(
-	job: Job<CheckWindowJobData>,
-): Promise<void> {
+export async function processCheckWindow(job: Job<CheckWindowJobData>): Promise<void> {
 	const { monitorId, teamId, checkedAt } = job.data;
 	const jobLog = logger.child({
 		jobId: job.id,
@@ -43,10 +41,7 @@ export async function processCheckWindow(
 	// Guard against races: if a newer check-in arrived after the window job was
 	// scheduled, we do not need to fire an alert.
 	const windowScheduledAt = new Date(checkedAt);
-	if (
-		monitor.lastCheckinAt !== null &&
-		monitor.lastCheckinAt > windowScheduledAt
-	) {
+	if (monitor.lastCheckinAt !== null && monitor.lastCheckinAt > windowScheduledAt) {
 		jobLog.info(
 			{ lastCheckinAt: monitor.lastCheckinAt, windowScheduledAt },
 			"newer check-in arrived — skipping alert",
@@ -123,10 +118,7 @@ async function scheduleNextCheckWindow(
 	try {
 		nextWindowClose = getNextWindowClose(schedule, timezone, gracePeriod);
 	} catch (err) {
-		jobLog.error(
-			{ err },
-			"failed to compute next window close — not rescheduling",
-		);
+		jobLog.error({ err }, "failed to compute next window close — not rescheduling");
 		return;
 	}
 
@@ -145,8 +137,5 @@ async function scheduleNextCheckWindow(
 		removeOnFail: { count: 25 },
 	});
 
-	jobLog.info(
-		{ nextWindowClose, delayMs: delay },
-		"scheduled next check-window job",
-	);
+	jobLog.info({ nextWindowClose, delayMs: delay }, "scheduled next check-window job");
 }

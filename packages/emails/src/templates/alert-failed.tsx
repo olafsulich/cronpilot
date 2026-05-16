@@ -28,15 +28,13 @@ export function AlertFailedEmail({
 				<span style={alertBannerTextStyle}>Job Failed</span>
 			</div>
 
-			<Text style={headingStyle}>
-				&ldquo;{monitorName}&rdquo; reported a failure
-			</Text>
+			<Text style={headingStyle}>&ldquo;{monitorName}&rdquo; reported a failure</Text>
 
 			<Text style={bodyTextStyle}>Hi {teamName} team,</Text>
 
 			<Text style={bodyTextStyle}>
-				Your cron job <strong>{monitorName}</strong> completed but reported an
-				explicit failure by sending a non-zero exit code to Cronpilot.
+				Your cron job <strong>{monitorName}</strong> completed but reported an explicit failure by
+				sending a non-zero exit code to Cronpilot.
 				{exitCode !== undefined
 					? ` The job exited with code ${exitCode}.`
 					: " No exit code details were provided."}
@@ -47,32 +45,22 @@ export function AlertFailedEmail({
 				<DetailRow label="Monitor" value={monitorName} />
 				<DetailRow label="Failed at" value={formattedTime} />
 				{exitCode !== undefined && (
-					<DetailRow
-						label="Exit code"
-						value={String(exitCode)}
-						valueColor="#dc2626"
-					/>
+					<DetailRow label="Exit code" value={String(exitCode)} valueColor="#dc2626" />
 				)}
 				<DetailRow label="Status" value="Failed" valueColor="#dc2626" />
 			</div>
 
 			<Text style={bodyTextStyle}>
-				A non-zero exit code typically indicates that your job encountered an
-				error during execution. Review your job&rsquo;s logs to identify the
-				root cause. Common causes include:
+				A non-zero exit code typically indicates that your job encountered an error during
+				execution. Review your job&rsquo;s logs to identify the root cause. Common causes include:
 			</Text>
 
 			<ul style={listStyle}>
-				<li style={listItemStyle}>
-					Uncaught exceptions or unhandled errors in your script
-				</li>
-				<li style={listItemStyle}>
-					External dependency failures (database, API, filesystem)
-				</li>
+				<li style={listItemStyle}>Uncaught exceptions or unhandled errors in your script</li>
+				<li style={listItemStyle}>External dependency failures (database, API, filesystem)</li>
 				<li style={listItemStyle}>Insufficient permissions or disk space</li>
 				<li style={listItemStyle}>
-					Explicit failure signaling (e.g.,{" "}
-					<code style={codeStyle}>sys.exit(1)</code> in Python,{" "}
+					Explicit failure signaling (e.g., <code style={codeStyle}>sys.exit(1)</code> in Python,{" "}
 					<code style={codeStyle}>process.exit(1)</code> in Node.js)
 				</li>
 			</ul>
@@ -84,9 +72,8 @@ export function AlertFailedEmail({
 			</div>
 
 			<Text style={helpTextStyle}>
-				You received this alert because you are a member of the{" "}
-				<strong>{teamName}</strong> team on Cronpilot. Manage your alert
-				preferences in{" "}
+				You received this alert because you are a member of the <strong>{teamName}</strong> team on
+				Cronpilot. Manage your alert preferences in{" "}
 				<Link
 					href={`https://cronpilot.io/settings/alerts?utm_source=email&utm_campaign=${campaign}`}
 					style={linkStyle}
@@ -109,9 +96,7 @@ function DetailRow({ label, value, valueColor }: DetailRowProps) {
 	return (
 		<div style={detailRowStyle}>
 			<span style={detailLabelStyle}>{label}</span>
-			<span style={{ ...detailValueStyle, color: valueColor ?? "#1e293b" }}>
-				{value}
-			</span>
+			<span style={{ ...detailValueStyle, color: valueColor ?? "#1e293b" }}>{value}</span>
 		</div>
 	);
 }

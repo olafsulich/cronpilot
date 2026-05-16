@@ -28,16 +28,13 @@ export function AlertResolvedEmail({
 				<span style={successBannerTextStyle}>Monitor Recovered</span>
 			</div>
 
-			<Text style={headingStyle}>
-				&ldquo;{monitorName}&rdquo; is back to normal
-			</Text>
+			<Text style={headingStyle}>&ldquo;{monitorName}&rdquo; is back to normal</Text>
 
 			<Text style={bodyTextStyle}>Hi {teamName} team,</Text>
 
 			<Text style={bodyTextStyle}>
-				Great news — your cron job <strong>{monitorName}</strong> has
-				successfully checked in and is back to a healthy state. The incident has
-				been automatically resolved.
+				Great news — your cron job <strong>{monitorName}</strong> has successfully checked in and is
+				back to a healthy state. The incident has been automatically resolved.
 			</Text>
 
 			{/* Details card */}
@@ -49,9 +46,8 @@ export function AlertResolvedEmail({
 			</div>
 
 			<Text style={bodyTextStyle}>
-				No further action is required. If this issue recurs, consider reviewing
-				your job&rsquo;s reliability and adding better error handling or retry
-				logic.
+				No further action is required. If this issue recurs, consider reviewing your job&rsquo;s
+				reliability and adding better error handling or retry logic.
 			</Text>
 
 			<div style={buttonWrapperStyle}>
@@ -61,9 +57,8 @@ export function AlertResolvedEmail({
 			</div>
 
 			<Text style={helpTextStyle}>
-				You received this notification because you are a member of the{" "}
-				<strong>{teamName}</strong> team on Cronpilot. Manage your alert
-				preferences in{" "}
+				You received this notification because you are a member of the <strong>{teamName}</strong>{" "}
+				team on Cronpilot. Manage your alert preferences in{" "}
 				<Link
 					href={`https://cronpilot.io/settings/alerts?utm_source=email&utm_campaign=${campaign}`}
 					style={linkStyle}
@@ -86,9 +81,7 @@ function DetailRow({ label, value, valueColor }: DetailRowProps) {
 	return (
 		<div style={detailRowStyle}>
 			<span style={detailLabelStyle}>{label}</span>
-			<span style={{ ...detailValueStyle, color: valueColor ?? "#1e293b" }}>
-				{value}
-			</span>
+			<span style={{ ...detailValueStyle, color: valueColor ?? "#1e293b" }}>{value}</span>
 		</div>
 	);
 }

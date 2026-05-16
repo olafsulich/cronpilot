@@ -9,9 +9,7 @@ function getKey(): Buffer {
 	if (!raw) throw new Error("ENCRYPTION_KEY env var is not set");
 	const key = Buffer.from(raw, "hex");
 	if (key.length !== 32) {
-		throw new Error(
-			"ENCRYPTION_KEY must be a 32-byte hex-encoded string (64 hex chars)",
-		);
+		throw new Error("ENCRYPTION_KEY must be a 32-byte hex-encoded string (64 hex chars)");
 	}
 	return key;
 }
@@ -26,10 +24,7 @@ export function encrypt(plaintext: string): string {
 	const key = getKey();
 	const iv = randomBytes(IV_LENGTH);
 	const cipher = createCipheriv(ALGORITHM, key, iv);
-	const encrypted = Buffer.concat([
-		cipher.update(plaintext, "utf8"),
-		cipher.final(),
-	]);
+	const encrypted = Buffer.concat([cipher.update(plaintext, "utf8"), cipher.final()]);
 	const tag = cipher.getAuthTag();
 	const payload: EncryptedPayload = {
 		iv: iv.toString("base64"),

@@ -12,10 +12,7 @@ const UpdateTeamSchema = z.object({
 		.string()
 		.min(1)
 		.max(50)
-		.regex(
-			/^[a-z0-9-]+$/,
-			"Slug may only contain lowercase letters, numbers, and hyphens",
-		)
+		.regex(/^[a-z0-9-]+$/, "Slug may only contain lowercase letters, numbers, and hyphens")
 		.optional(),
 });
 
@@ -68,18 +65,12 @@ async function teamsPlugin(fastify: FastifyInstance): Promise<void> {
 			},
 		});
 		if (membership.role !== "owner" && membership.role !== "admin") {
-			throw new AppError(
-				"FORBIDDEN",
-				"Only team owners and admins can update team settings",
-				403,
-			);
+			throw new AppError("FORBIDDEN", "Only team owners and admins can update team settings", 403);
 		}
 
 		const parsed = UpdateTeamSchema.safeParse(request.body);
 		if (!parsed.success) {
-			const msg = parsed.error.errors
-				.map((e) => `${e.path.join(".")}: ${e.message}`)
-				.join(", ");
+			const msg = parsed.error.errors.map((e) => `${e.path.join(".")}: ${e.message}`).join(", ");
 			throw new AppError("VALIDATION_ERROR", msg, 400);
 		}
 
@@ -120,18 +111,12 @@ async function teamsPlugin(fastify: FastifyInstance): Promise<void> {
 			},
 		});
 		if (membership.role !== "owner" && membership.role !== "admin") {
-			throw new AppError(
-				"FORBIDDEN",
-				"Only team owners and admins can invite members",
-				403,
-			);
+			throw new AppError("FORBIDDEN", "Only team owners and admins can invite members", 403);
 		}
 
 		const parsed = InviteMemberSchema.safeParse(request.body);
 		if (!parsed.success) {
-			const msg = parsed.error.errors
-				.map((e) => `${e.path.join(".")}: ${e.message}`)
-				.join(", ");
+			const msg = parsed.error.errors.map((e) => `${e.path.join(".")}: ${e.message}`).join(", ");
 			throw new AppError("VALIDATION_ERROR", msg, 400);
 		}
 
@@ -146,11 +131,7 @@ async function teamsPlugin(fastify: FastifyInstance): Promise<void> {
 				},
 			});
 			if (existingMembership) {
-				throw new AppError(
-					"CONFLICT",
-					"This user is already a member of the team",
-					409,
-				);
+				throw new AppError("CONFLICT", "This user is already a member of the team", 409);
 			}
 		}
 
@@ -205,18 +186,10 @@ async function teamsPlugin(fastify: FastifyInstance): Promise<void> {
 				},
 			});
 			if (callerMembership.role !== "owner") {
-				throw new AppError(
-					"FORBIDDEN",
-					"Only the team owner can change member roles",
-					403,
-				);
+				throw new AppError("FORBIDDEN", "Only the team owner can change member roles", 403);
 			}
 			if (request.params.userId === request.user.id) {
-				throw new AppError(
-					"BAD_REQUEST",
-					"You cannot change your own role",
-					400,
-				);
+				throw new AppError("BAD_REQUEST", "You cannot change your own role", 400);
 			}
 
 			const parsed = UpdateMemberSchema.safeParse(request.body);
@@ -261,11 +234,7 @@ async function teamsPlugin(fastify: FastifyInstance): Promise<void> {
 			const isSelf = request.params.userId === request.user.id;
 
 			if (!isSelf && !isOwner && !isAdmin) {
-				throw new AppError(
-					"FORBIDDEN",
-					"You do not have permission to remove this member",
-					403,
-				);
+				throw new AppError("FORBIDDEN", "You do not have permission to remove this member", 403);
 			}
 
 			const targetMembership = await prisma.teamMember.findUnique({

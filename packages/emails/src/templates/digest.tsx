@@ -30,29 +30,19 @@ export function DigestEmail({
 	const activeMonitors = monitors.filter((m) => m.status !== "paused");
 	const overallUptime =
 		activeMonitors.length > 0
-			? activeMonitors.reduce((sum, m) => sum + m.uptime, 0) /
-				activeMonitors.length
+			? activeMonitors.reduce((sum, m) => sum + m.uptime, 0) / activeMonitors.length
 			: 100;
 
 	const healthyCount = monitors.filter((m) => m.status === "healthy").length;
-	const issueCount = monitors.filter(
-		(m) => m.status === "late" || m.status === "down",
-	).length;
+	const issueCount = monitors.filter((m) => m.status === "late" || m.status === "down").length;
 
 	const weekStartStr = formatDate(weekStart);
 	const weekEndStr = formatDate(weekEnd);
 
-	const uptimeColor =
-		overallUptime >= 99
-			? "#16a34a"
-			: overallUptime >= 95
-				? "#d97706"
-				: "#dc2626";
+	const uptimeColor = overallUptime >= 99 ? "#16a34a" : overallUptime >= 95 ? "#d97706" : "#dc2626";
 
 	return (
-		<Layout
-			previewText={`Your weekly Cronpilot digest — ${weekStartStr} to ${weekEndStr}`}
-		>
+		<Layout previewText={`Your weekly Cronpilot digest — ${weekStartStr} to ${weekEndStr}`}>
 			<Text style={headingStyle}>Weekly Digest</Text>
 			<Text style={subheadingStyle}>
 				{weekStartStr} &ndash; {weekEndStr} &middot; {teamName}
@@ -62,9 +52,7 @@ export function DigestEmail({
 			<div style={statsGridStyle}>
 				<StatCard
 					label="Overall uptime"
-					value={
-						activeMonitors.length > 0 ? `${overallUptime.toFixed(2)}%` : "—"
-					}
+					value={activeMonitors.length > 0 ? `${overallUptime.toFixed(2)}%` : "—"}
 					valueColor={uptimeColor}
 				/>
 				<StatCard
@@ -82,15 +70,13 @@ export function DigestEmail({
 			{/* Status summary message */}
 			{totalIncidents === 0 ? (
 				<div style={allClearBannerStyle}>
-					<Text style={allClearTextStyle}>
-						All systems ran without incident this week.
-					</Text>
+					<Text style={allClearTextStyle}>All systems ran without incident this week.</Text>
 				</div>
 			) : (
 				<div style={incidentBannerStyle}>
 					<Text style={incidentBannerTextStyle}>
-						{totalIncidents} incident{totalIncidents !== 1 ? "s" : ""} recorded
-						across {issueCount} monitor{issueCount !== 1 ? "s" : ""} this week.
+						{totalIncidents} incident{totalIncidents !== 1 ? "s" : ""} recorded across {issueCount}{" "}
+						monitor{issueCount !== 1 ? "s" : ""} this week.
 					</Text>
 				</div>
 			)}
@@ -118,8 +104,7 @@ export function DigestEmail({
 			{/* Incidents note */}
 			{totalIncidents > 0 && (
 				<Text style={incidentsNoteStyle}>
-					Visit your dashboard for a full incident timeline and per-monitor
-					event history.
+					Visit your dashboard for a full incident timeline and per-monitor event history.
 				</Text>
 			)}
 
@@ -130,8 +115,8 @@ export function DigestEmail({
 			</div>
 
 			<Text style={footerNoteStyle}>
-				This digest is sent every Monday for the previous week. You can adjust
-				digest frequency or disable it in your notification settings.
+				This digest is sent every Monday for the previous week. You can adjust digest frequency or
+				disable it in your notification settings.
 			</Text>
 		</Layout>
 	);

@@ -45,9 +45,5 @@ export function toAppError(err: unknown): AppError {
 	if (err instanceof Error) {
 		return new AppError(ERROR_CODES.INTERNAL_ERROR, err.message, 500);
 	}
-	return new AppError(
-		ERROR_CODES.INTERNAL_ERROR,
-		"An unexpected error occurred",
-		500,
-	);
+	return new AppError(ERROR_CODES.INTERNAL_ERROR, "An unexpected error occurred", 500);
 }

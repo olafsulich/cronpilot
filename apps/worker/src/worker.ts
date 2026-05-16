@@ -47,11 +47,10 @@ async function main(): Promise<void> {
 		{ connection, concurrency: WORKER_CONCURRENCY },
 	);
 
-	const alertWorker = new Worker<AlertJobData>(
-		QUEUES.ALERT,
-		async (job) => processAlert(job),
-		{ connection, concurrency: WORKER_CONCURRENCY },
-	);
+	const alertWorker = new Worker<AlertJobData>(QUEUES.ALERT, async (job) => processAlert(job), {
+		connection,
+		concurrency: WORKER_CONCURRENCY,
+	});
 
 	const alertResolveWorker = new Worker<AlertResolveJobData>(
 		QUEUES.ALERT_RESOLVE,
@@ -59,11 +58,10 @@ async function main(): Promise<void> {
 		{ connection, concurrency: WORKER_CONCURRENCY },
 	);
 
-	const digestWorker = new Worker<DigestJobData>(
-		QUEUES.DIGEST,
-		async (job) => processDigest(job),
-		{ connection, concurrency: 1 },
-	);
+	const digestWorker = new Worker<DigestJobData>(QUEUES.DIGEST, async (job) => processDigest(job), {
+		connection,
+		concurrency: 1,
+	});
 
 	const cleanupWorker = new Worker<CleanupJobData>(
 		QUEUES.CLEANUP,
@@ -125,9 +123,7 @@ async function main(): Promise<void> {
 		},
 	);
 
-	logger.info(
-		"recurring jobs registered (digest: 0 8 * * 0, cleanup: 0 3 * * *)",
-	);
+	logger.info("recurring jobs registered (digest: 0 8 * * 0, cleanup: 0 3 * * *)");
 	logger.info("Cronpilot worker is ready");
 
 	// --- Graceful shutdown ---

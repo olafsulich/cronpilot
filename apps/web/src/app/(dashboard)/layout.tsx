@@ -4,11 +4,7 @@ import { SidebarNav } from "@/components/shared/nav";
 import { requireSession } from "@/lib/auth";
 import { UserMenu } from "./user-menu";
 
-export default async function DashboardLayout({
-	children,
-}: {
-	children: React.ReactNode;
-}) {
+export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
 	const session = await requireSession();
 
 	return (
@@ -19,9 +15,7 @@ export default async function DashboardLayout({
 				<div className="h-16 flex items-center px-5 border-b border-gray-100">
 					<Link href="/dashboard/monitors" className="flex items-center gap-2">
 						<Activity className="h-5 w-5 text-orange-500" />
-						<span className="font-semibold text-gray-900 text-sm">
-							Cronpilot
-						</span>
+						<span className="font-semibold text-gray-900 text-sm">Cronpilot</span>
 					</Link>
 				</div>
 

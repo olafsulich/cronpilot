@@ -73,10 +73,7 @@ async function scheduleWarnings(
 
 	for (const { daysLeft, delayMs } of warnings) {
 		if (delayMs <= 0) {
-			jobLog.info(
-				{ daysLeft, delayMs },
-				"warning window already passed — skipping",
-			);
+			jobLog.info({ daysLeft, delayMs }, "warning window already passed — skipping");
 			continue;
 		}
 
@@ -98,10 +95,7 @@ async function scheduleWarnings(
 			},
 		);
 
-		jobLog.info(
-			{ daysLeft, delayMs, trialEndsAt },
-			"scheduled trial warning job",
-		);
+		jobLog.info({ daysLeft, delayMs, trialEndsAt }, "scheduled trial warning job");
 	}
 }
 

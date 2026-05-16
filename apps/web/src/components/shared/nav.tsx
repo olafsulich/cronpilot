@@ -35,8 +35,7 @@ export function SidebarNav() {
 	return (
 		<nav aria-label="Sidebar" className="flex flex-col gap-1">
 			{navItems.map((item) => {
-				const isActive =
-					pathname === item.href || pathname.startsWith(`${item.href}/`);
+				const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
 
 				return (
 					<Link
@@ -54,10 +53,7 @@ export function SidebarNav() {
 					>
 						<span
 							aria-hidden="true"
-							className={cn(
-								"flex-shrink-0",
-								isActive ? "text-orange-500" : "text-gray-400",
-							)}
+							className={cn("flex-shrink-0", isActive ? "text-orange-500" : "text-gray-400")}
 						>
 							{item.icon}
 						</span>

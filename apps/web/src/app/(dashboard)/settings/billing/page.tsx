@@ -45,10 +45,7 @@ export default function BillingPage() {
 
 	async function handleManageBilling() {
 		try {
-			const result = await apiClient.post<{ url: string }>(
-				"/billing/portal",
-				{},
-			);
+			const result = await apiClient.post<{ url: string }>("/billing/portal", {});
 			window.open(result.url, "_blank");
 		} catch {
 			// silently fail — stripe might not be configured in dev
@@ -67,18 +64,12 @@ export default function BillingPage() {
 
 	const { team, usage } = data;
 	const planLimits = PLANS[team.plan];
-	const monitorsLimit =
-		planLimits.monitorsLimit === Infinity ? Infinity : planLimits.monitorsLimit;
-	const membersLimit =
-		planLimits.teamMembers === Infinity ? Infinity : planLimits.teamMembers;
+	const monitorsLimit = planLimits.monitorsLimit === Infinity ? Infinity : planLimits.monitorsLimit;
+	const membersLimit = planLimits.teamMembers === Infinity ? Infinity : planLimits.teamMembers;
 	const monitorsPercent =
-		monitorsLimit === Infinity
-			? 0
-			: Math.round((usage.monitors / monitorsLimit) * 100);
+		monitorsLimit === Infinity ? 0 : Math.round((usage.monitors / monitorsLimit) * 100);
 	const membersPercent =
-		membersLimit === Infinity
-			? 0
-			: Math.round((usage.members / membersLimit) * 100);
+		membersLimit === Infinity ? 0 : Math.round((usage.members / membersLimit) * 100);
 
 	const upgradeLink = UPGRADE_LINKS[team.plan];
 
@@ -86,9 +77,7 @@ export default function BillingPage() {
 		<div className="max-w-2xl">
 			<div className="mb-8">
 				<h1 className="text-2xl font-bold text-gray-900">Billing</h1>
-				<p className="text-gray-500 text-sm mt-1">
-					Manage your plan and usage.
-				</p>
+				<p className="text-gray-500 text-sm mt-1">Manage your plan and usage.</p>
 			</div>
 
 			{/* Current plan */}
@@ -100,9 +89,7 @@ export default function BillingPage() {
 							<h2 className="text-xl font-bold text-gray-900">
 								{PLAN_LABELS[team.plan] ?? team.plan}
 							</h2>
-							<span className="text-sm text-gray-400">
-								{PLAN_PRICES[team.plan] ?? ""}
-							</span>
+							<span className="text-sm text-gray-400">{PLAN_PRICES[team.plan] ?? ""}</span>
 						</div>
 						{team.trialEndsAt && new Date(team.trialEndsAt) > new Date() && (
 							<p className="text-xs text-orange-500 font-medium mt-1">
@@ -137,28 +124,19 @@ export default function BillingPage() {
 				<div className="mt-4 pt-4 border-t border-gray-100 grid grid-cols-3 gap-4 text-sm">
 					<PlanFeature
 						label="Monitors"
-						value={
-							monitorsLimit === Infinity ? "Unlimited" : String(monitorsLimit)
-						}
+						value={monitorsLimit === Infinity ? "Unlimited" : String(monitorsLimit)}
 					/>
-					<PlanFeature
-						label="History"
-						value={`${planLimits.checkinRetention} days`}
-					/>
+					<PlanFeature label="History" value={`${planLimits.checkinRetention} days`} />
 					<PlanFeature
 						label="Team members"
-						value={
-							membersLimit === Infinity ? "Unlimited" : String(membersLimit)
-						}
+						value={membersLimit === Infinity ? "Unlimited" : String(membersLimit)}
 					/>
 				</div>
 			</div>
 
 			{/* Usage */}
 			<div className="bg-white rounded-xl border border-gray-200 p-6 mb-6">
-				<h3 className="font-semibold text-gray-900 mb-5 text-sm">
-					Usage this period
-				</h3>
+				<h3 className="font-semibold text-gray-900 mb-5 text-sm">Usage this period</h3>
 				<div className="space-y-5">
 					<UsageBar
 						label="Monitors"
@@ -183,28 +161,20 @@ export default function BillingPage() {
 							<Zap className="h-5 w-5 text-white" />
 						</div>
 						<div className="flex-1">
-							<h3 className="font-semibold text-gray-900 mb-1">
-								Upgrade to Pro
-							</h3>
+							<h3 className="font-semibold text-gray-900 mb-1">Upgrade to Pro</h3>
 							<p className="text-sm text-gray-600 mb-4">
-								Get 20 monitors, 90-day history, Slack and PagerDuty alerts, and
-								up to 5 team members.
+								Get 20 monitors, 90-day history, Slack and PagerDuty alerts, and up to 5 team
+								members.
 							</p>
 							<ul className="space-y-1.5 mb-4">
-								{[
-									"20 monitors",
-									"Slack + PagerDuty",
-									"5 team members",
-									"90-day history",
-								].map((f) => (
-									<li
-										key={f}
-										className="flex items-center gap-2 text-sm text-gray-700"
-									>
-										<CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
-										{f}
-									</li>
-								))}
+								{["20 monitors", "Slack + PagerDuty", "5 team members", "90-day history"].map(
+									(f) => (
+										<li key={f} className="flex items-center gap-2 text-sm text-gray-700">
+											<CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
+											{f}
+										</li>
+									),
+								)}
 							</ul>
 							<a
 								href="/api/billing/checkout?plan=pro"

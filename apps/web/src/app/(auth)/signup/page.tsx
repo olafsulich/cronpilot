@@ -33,13 +33,9 @@ export default function SignupPage() {
 		} catch (err: unknown) {
 			const error = err as { message?: string; code?: string };
 			if (error.code === "DUPLICATE_EMAIL") {
-				setServerError(
-					"An account with this email already exists. Try signing in.",
-				);
+				setServerError("An account with this email already exists. Try signing in.");
 			} else {
-				setServerError(
-					error.message ?? "Something went wrong. Please try again.",
-				);
+				setServerError(error.message ?? "Something went wrong. Please try again.");
 			}
 			return;
 		}
@@ -69,19 +65,13 @@ export default function SignupPage() {
 				<div className="flex justify-center mb-8">
 					<Link href="/" className="flex items-center gap-2">
 						<Activity className="h-7 w-7 text-orange-500" />
-						<span className="text-xl font-semibold text-gray-900">
-							Cronpilot
-						</span>
+						<span className="text-xl font-semibold text-gray-900">Cronpilot</span>
 					</Link>
 				</div>
 
 				<div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
-					<h1 className="text-2xl font-bold text-gray-900 mb-1">
-						Create your account
-					</h1>
-					<p className="text-gray-500 text-sm mb-8">
-						Get started free. No credit card required.
-					</p>
+					<h1 className="text-2xl font-bold text-gray-900 mb-1">Create your account</h1>
+					<p className="text-gray-500 text-sm mb-8">Get started free. No credit card required.</p>
 
 					{serverError && (
 						<div className="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-lg mb-6">
@@ -89,16 +79,9 @@ export default function SignupPage() {
 						</div>
 					)}
 
-					<form
-						onSubmit={handleSubmit(onSubmit)}
-						noValidate
-						className="space-y-5"
-					>
+					<form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
 						<div>
-							<label
-								htmlFor="teamName"
-								className="block text-sm font-medium text-gray-700 mb-1.5"
-							>
+							<label htmlFor="teamName" className="block text-sm font-medium text-gray-700 mb-1.5">
 								Team name
 							</label>
 							<input
@@ -110,17 +93,12 @@ export default function SignupPage() {
 								placeholder="Acme Corp"
 							/>
 							{errors.teamName && (
-								<p className="text-red-600 text-xs mt-1.5">
-									{errors.teamName.message}
-								</p>
+								<p className="text-red-600 text-xs mt-1.5">{errors.teamName.message}</p>
 							)}
 						</div>
 
 						<div>
-							<label
-								htmlFor="email"
-								className="block text-sm font-medium text-gray-700 mb-1.5"
-							>
+							<label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5">
 								Email address
 							</label>
 							<input
@@ -132,17 +110,12 @@ export default function SignupPage() {
 								placeholder="you@example.com"
 							/>
 							{errors.email && (
-								<p className="text-red-600 text-xs mt-1.5">
-									{errors.email.message}
-								</p>
+								<p className="text-red-600 text-xs mt-1.5">{errors.email.message}</p>
 							)}
 						</div>
 
 						<div>
-							<label
-								htmlFor="password"
-								className="block text-sm font-medium text-gray-700 mb-1.5"
-							>
+							<label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1.5">
 								Password
 							</label>
 							<input
@@ -154,9 +127,7 @@ export default function SignupPage() {
 								placeholder="At least 8 characters"
 							/>
 							{errors.password && (
-								<p className="text-red-600 text-xs mt-1.5">
-									{errors.password.message}
-								</p>
+								<p className="text-red-600 text-xs mt-1.5">{errors.password.message}</p>
 							)}
 						</div>
 

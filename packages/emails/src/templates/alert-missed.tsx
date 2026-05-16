@@ -28,16 +28,13 @@ export function AlertMissedEmail({
 				<span style={alertBannerTextStyle}>Missed Check-in</span>
 			</div>
 
-			<Text style={headingStyle}>
-				&ldquo;{monitorName}&rdquo; hasn&rsquo;t checked in
-			</Text>
+			<Text style={headingStyle}>&ldquo;{monitorName}&rdquo; hasn&rsquo;t checked in</Text>
 
 			<Text style={bodyTextStyle}>Hi {teamName} team,</Text>
 
 			<Text style={bodyTextStyle}>
-				Your cron job <strong>{monitorName}</strong> missed its expected
-				check-in. This likely means the job did not run, was killed before
-				completing, or failed silently.
+				Your cron job <strong>{monitorName}</strong> missed its expected check-in. This likely means
+				the job did not run, was killed before completing, or failed silently.
 			</Text>
 
 			{/* Details card */}
@@ -49,9 +46,8 @@ export function AlertMissedEmail({
 			</div>
 
 			<Text style={bodyTextStyle}>
-				Check your server logs to diagnose the issue. If this was intentional
-				(e.g., a scheduled maintenance window), you can mute alerts from the
-				dashboard.
+				Check your server logs to diagnose the issue. If this was intentional (e.g., a scheduled
+				maintenance window), you can mute alerts from the dashboard.
 			</Text>
 
 			<div style={buttonWrapperStyle}>
@@ -61,9 +57,8 @@ export function AlertMissedEmail({
 			</div>
 
 			<Text style={helpTextStyle}>
-				You received this alert because you are a member of the{" "}
-				<strong>{teamName}</strong> team on Cronpilot. Manage your alert
-				preferences in{" "}
+				You received this alert because you are a member of the <strong>{teamName}</strong> team on
+				Cronpilot. Manage your alert preferences in{" "}
 				<Link
 					href={`https://cronpilot.io/settings/alerts?utm_source=email&utm_campaign=${campaign}`}
 					style={linkStyle}
@@ -86,9 +81,7 @@ function DetailRow({ label, value, valueColor }: DetailRowProps) {
 	return (
 		<div style={detailRowStyle}>
 			<span style={detailLabelStyle}>{label}</span>
-			<span style={{ ...detailValueStyle, color: valueColor ?? "#1e293b" }}>
-				{value}
-			</span>
+			<span style={{ ...detailValueStyle, color: valueColor ?? "#1e293b" }}>{value}</span>
 		</div>
 	);
 }

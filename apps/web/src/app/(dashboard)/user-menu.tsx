@@ -25,10 +25,7 @@ export function UserMenu({ email }: { email: string }) {
 					{email}
 				</span>
 				<ChevronDown
-					className={cn(
-						"h-4 w-4 text-gray-400 transition-transform",
-						open && "rotate-180",
-					)}
+					className={cn("h-4 w-4 text-gray-400 transition-transform", open && "rotate-180")}
 				/>
 			</button>
 
@@ -43,9 +40,7 @@ export function UserMenu({ email }: { email: string }) {
 					<div className="absolute right-0 top-full mt-2 w-52 bg-white rounded-xl shadow-lg border border-gray-200 py-1 z-20">
 						<div className="px-4 py-2 border-b border-gray-100 mb-1">
 							<p className="text-xs text-gray-400">Signed in as</p>
-							<p className="text-sm font-medium text-gray-900 truncate">
-								{email}
-							</p>
+							<p className="text-sm font-medium text-gray-900 truncate">{email}</p>
 						</div>
 						<Link
 							href="/dashboard/settings/integrations"

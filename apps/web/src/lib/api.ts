@@ -34,11 +34,7 @@ async function handleResponse<T>(res: Response): Promise<T> {
 				res.status,
 			);
 		}
-		throw new AppError(
-			ERROR_CODES.INTERNAL_ERROR,
-			`API error: ${res.status}`,
-			res.status,
-		);
+		throw new AppError(ERROR_CODES.INTERNAL_ERROR, `API error: ${res.status}`, res.status);
 	}
 
 	const body = (await res.json()) as { data: T };
@@ -49,10 +45,7 @@ async function handleResponse<T>(res: Response): Promise<T> {
  * Server-side fetch using the internal API URL and service token.
  * Use this in Server Components and Route Handlers that need backend access.
  */
-export async function serverFetch<T>(
-	path: string,
-	options: RequestInit = {},
-): Promise<T> {
+export async function serverFetch<T>(path: string, options: RequestInit = {}): Promise<T> {
 	const baseUrl = getApiInternalUrl();
 	const token = getServiceToken();
 
@@ -85,10 +78,7 @@ export async function serverFetch<T>(
  * Client-side API client that routes through the Next.js /api proxy.
  * Use this in Client Components with SWR or direct fetches.
  */
-async function clientFetch<T>(
-	path: string,
-	options: RequestInit = {},
-): Promise<T> {
+async function clientFetch<T>(path: string, options: RequestInit = {}): Promise<T> {
 	const res = await fetch(`/api${path}`, {
 		...options,
 		headers: {

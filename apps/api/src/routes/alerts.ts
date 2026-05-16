@@ -18,9 +18,7 @@ async function alertsPlugin(fastify: FastifyInstance): Promise<void> {
 	fastify.get("/alerts", { preHandler }, async (request, reply) => {
 		const parsed = ListAlertsQuerySchema.safeParse(request.query);
 		if (!parsed.success) {
-			const msg = parsed.error.errors
-				.map((e) => `${e.path.join(".")}: ${e.message}`)
-				.join(", ");
+			const msg = parsed.error.errors.map((e) => `${e.path.join(".")}: ${e.message}`).join(", ");
 			throw new AppError("VALIDATION_ERROR", msg, 400);
 		}
 		const result = await listAlerts(request.team.id, parsed.data);
@@ -28,14 +26,10 @@ async function alertsPlugin(fastify: FastifyInstance): Promise<void> {
 	});
 
 	// GET /alerts/:id
-	fastify.get<{ Params: { id: string } }>(
-		"/alerts/:id",
-		{ preHandler },
-		async (request, reply) => {
-			const alert = await getAlert(request.team.id, request.params.id);
-			return reply.send({ data: alert });
-		},
-	);
+	fastify.get<{ Params: { id: string } }>("/alerts/:id", { preHandler }, async (request, reply) => {
+		const alert = await getAlert(request.team.id, request.params.id);
+		return reply.send({ data: alert });
+	});
 
 	// POST /alerts/:id/resolve
 	fastify.post<{ Params: { id: string } }>(

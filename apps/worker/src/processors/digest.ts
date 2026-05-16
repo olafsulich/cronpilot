@@ -20,9 +20,7 @@ const PERIOD_DAYS = 7;
 export async function processDigest(job: Job<DigestJobData>): Promise<void> {
 	const jobLog = logger.child({ jobId: job.id, processor: "digest" });
 
-	const periodEnd = job.data.periodEnd
-		? new Date(job.data.periodEnd)
-		: new Date();
+	const periodEnd = job.data.periodEnd ? new Date(job.data.periodEnd) : new Date();
 	const periodStart = job.data.periodStart
 		? new Date(job.data.periodStart)
 		: new Date(periodEnd.getTime() - PERIOD_DAYS * 24 * 60 * 60 * 1000);
@@ -40,10 +38,7 @@ export async function processDigest(job: Job<DigestJobData>): Promise<void> {
 		},
 	});
 
-	jobLog.info(
-		{ teamCount: teams.length, periodStart, periodEnd },
-		"starting digest run",
-	);
+	jobLog.info({ teamCount: teams.length, periodStart, periodEnd }, "starting digest run");
 
 	let sent = 0;
 	let skipped = 0;
@@ -51,10 +46,7 @@ export async function processDigest(job: Job<DigestJobData>): Promise<void> {
 	for (const team of teams) {
 		const ownerMember = team.members[0];
 		if (!ownerMember) {
-			jobLog.warn(
-				{ teamId: team.id },
-				"no owner found for team — skipping digest",
-			);
+			jobLog.warn({ teamId: team.id }, "no owner found for team — skipping digest");
 			skipped++;
 			continue;
 		}
@@ -67,10 +59,7 @@ export async function processDigest(job: Job<DigestJobData>): Promise<void> {
 		});
 
 		if (monitors.length === 0) {
-			jobLog.debug(
-				{ teamId: team.id },
-				"team has no active monitors — skipping digest",
-			);
+			jobLog.debug({ teamId: team.id }, "team has no active monitors — skipping digest");
 			skipped++;
 			continue;
 		}
@@ -104,16 +93,14 @@ export async function processDigest(job: Job<DigestJobData>): Promise<void> {
 
 		const monitorSummaries = monitors.map((m) => {
 			const stats = statsByMonitor[m.id] ?? { ok: 0, total: 0 };
-			const uptimePct =
-				stats.total > 0 ? Math.round((stats.ok / stats.total) * 100) : 100;
+			const uptimePct = stats.total > 0 ? Math.round((stats.ok / stats.total) * 100) : 100;
 			return { id: m.id, name: m.name, uptimePct, checkinCount: stats.total };
 		});
 
 		const overallUptimePct =
 			monitorSummaries.length > 0
 				? Math.round(
-						monitorSummaries.reduce((sum, m) => sum + m.uptimePct, 0) /
-							monitorSummaries.length,
+						monitorSummaries.reduce((sum, m) => sum + m.uptimePct, 0) / monitorSummaries.length,
 					)
 				: 100;
 

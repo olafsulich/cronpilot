@@ -54,11 +54,7 @@ export function isDeleted(record: { deletedAt: Date | null }): boolean {
  * field because Prisma generates per-model types. Callers are responsible for
  * only invoking this on models that declare `deletedAt DateTime?`.
  */
-export async function softDelete(
-	prisma: PrismaClient,
-	model: string,
-	id: string,
-): Promise<void> {
+export async function softDelete(prisma: PrismaClient, model: string, id: string): Promise<void> {
 	// biome-ignore lint/suspicious/noExplicitAny: dynamic model lookup requires any
 	const delegate = (prisma as any)[model];
 	if (typeof delegate?.update !== "function") {
@@ -77,11 +73,7 @@ export async function softDelete(
  * @param model   The Prisma model delegate name
  * @param id      The record's ID
  */
-export async function softRestore(
-	prisma: PrismaClient,
-	model: string,
-	id: string,
-): Promise<void> {
+export async function softRestore(prisma: PrismaClient, model: string, id: string): Promise<void> {
 	// biome-ignore lint/suspicious/noExplicitAny: dynamic model lookup requires any
 	const delegate = (prisma as any)[model];
 	if (typeof delegate?.update !== "function") {

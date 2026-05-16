@@ -23,11 +23,7 @@ async function monitorsPlugin(fastify: FastifyInstance): Promise<void> {
 	fastify.get("/monitors", { preHandler }, async (request, reply) => {
 		const pagination = PaginationSchema.safeParse(request.query);
 		if (!pagination.success) {
-			throw new AppError(
-				"VALIDATION_ERROR",
-				"Invalid pagination parameters",
-				400,
-			);
+			throw new AppError("VALIDATION_ERROR", "Invalid pagination parameters", 400);
 		}
 		const result = await listMonitors(request.team.id, pagination.data);
 		return reply.send(result);
@@ -37,9 +33,7 @@ async function monitorsPlugin(fastify: FastifyInstance): Promise<void> {
 	fastify.post("/monitors", { preHandler }, async (request, reply) => {
 		const parsed = CreateMonitorSchema.safeParse(request.body);
 		if (!parsed.success) {
-			const msg = parsed.error.errors
-				.map((e) => `${e.path.join(".")}: ${e.message}`)
-				.join(", ");
+			const msg = parsed.error.errors.map((e) => `${e.path.join(".")}: ${e.message}`).join(", ");
 			throw new AppError("VALIDATION_ERROR", msg, 400);
 		}
 		const monitor = await createMonitor(request.team.id, parsed.data);
@@ -63,16 +57,10 @@ async function monitorsPlugin(fastify: FastifyInstance): Promise<void> {
 		async (request, reply) => {
 			const parsed = UpdateMonitorSchema.safeParse(request.body);
 			if (!parsed.success) {
-				const msg = parsed.error.errors
-					.map((e) => `${e.path.join(".")}: ${e.message}`)
-					.join(", ");
+				const msg = parsed.error.errors.map((e) => `${e.path.join(".")}: ${e.message}`).join(", ");
 				throw new AppError("VALIDATION_ERROR", msg, 400);
 			}
-			const monitor = await updateMonitor(
-				request.team.id,
-				request.params.id,
-				parsed.data,
-			);
+			const monitor = await updateMonitor(request.team.id, request.params.id, parsed.data);
 			return reply.send({ data: monitor });
 		},
 	);

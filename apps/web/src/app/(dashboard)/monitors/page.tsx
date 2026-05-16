@@ -62,9 +62,7 @@ function MonitorCard({ monitor }: { monitor: MonitorResponse }) {
 					<h2 className="font-semibold text-gray-900 truncate group-hover:text-orange-600 transition-colors">
 						{monitor.name}
 					</h2>
-					<p className="text-xs text-gray-400 font-mono mt-0.5 truncate">
-						{monitor.schedule}
-					</p>
+					<p className="text-xs text-gray-400 font-mono mt-0.5 truncate">{monitor.schedule}</p>
 				</div>
 				<StatusBadge status={monitor.computedStatus} />
 			</div>

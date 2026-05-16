@@ -61,9 +61,7 @@ export function parseDate(s: string): Date {
  * Returns the start of the day (midnight UTC) for a given date.
  */
 export function startOfDayUTC(d: Date): Date {
-	return new Date(
-		Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()),
-	);
+	return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
 }
 
 /**

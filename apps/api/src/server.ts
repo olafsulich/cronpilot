@@ -33,22 +33,18 @@ async function buildServer() {
 
 	// We need the raw body for Stripe webhook signature verification.
 	// Register a custom content type parser that stores the raw buffer.
-	fastify.addContentTypeParser(
-		"application/json",
-		{ parseAs: "buffer" },
-		(req, body, done) => {
-			// Store raw body before parsing
-			(req as unknown as { rawBody: Buffer }).rawBody = body;
-			try {
-				const json: unknown = JSON.parse(body.toString());
-				done(null, json);
-			} catch (_err) {
-				const error = new Error("Invalid JSON");
-				(error as NodeJS.ErrnoException).statusCode = 400;
-				done(error as Error, undefined);
-			}
-		},
-	);
+	fastify.addContentTypeParser("application/json", { parseAs: "buffer" }, (req, body, done) => {
+		// Store raw body before parsing
+		(req as unknown as { rawBody: Buffer }).rawBody = body;
+		try {
+			const json: unknown = JSON.parse(body.toString());
+			done(null, json);
+		} catch (_err) {
+			const error = new Error("Invalid JSON");
+			(error as NodeJS.ErrnoException).statusCode = 400;
+			done(error as Error, undefined);
+		}
+	});
 
 	// Security headers
 	await fastify.register(helmet, {

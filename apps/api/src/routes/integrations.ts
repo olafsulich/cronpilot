@@ -24,9 +24,7 @@ async function integrationsPlugin(fastify: FastifyInstance): Promise<void> {
 	fastify.post("/integrations", { preHandler }, async (request, reply) => {
 		const parsed = CreateIntegrationSchema.safeParse(request.body);
 		if (!parsed.success) {
-			const msg = parsed.error.errors
-				.map((e) => `${e.path.join(".")}: ${e.message}`)
-				.join(", ");
+			const msg = parsed.error.errors.map((e) => `${e.path.join(".")}: ${e.message}`).join(", ");
 			throw new AppError("VALIDATION_ERROR", msg, 400);
 		}
 		const integration = await createIntegration(request.team.id, parsed.data);

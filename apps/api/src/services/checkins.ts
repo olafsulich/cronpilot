@@ -29,10 +29,7 @@ function mapCheckin(checkin: Checkin): CheckinResponse {
 	};
 }
 
-export async function processCheckin(
-	token: string,
-	data: CheckinInput,
-): Promise<CheckinResponse> {
+export async function processCheckin(token: string, data: CheckinInput): Promise<CheckinResponse> {
 	// 1. Resolve monitor by ping token
 	const monitor = await prisma.monitor.findUnique({
 		where: { pingToken: token },
@@ -65,11 +62,7 @@ export async function processCheckin(
 		await checkWindowQueue.remove(`check-window:${monitor.id}`);
 
 		// 5. Schedule next check-window job
-		const delayMs = getNextWindowClose(
-			monitor.schedule,
-			monitor.timezone,
-			monitor.gracePeriod,
-		);
+		const delayMs = getNextWindowClose(monitor.schedule, monitor.timezone, monitor.gracePeriod);
 		if (delayMs > 0) {
 			await checkWindowQueue.add(
 				"check-window",

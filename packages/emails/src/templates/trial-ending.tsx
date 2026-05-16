@@ -43,41 +43,33 @@ export function TrialEndingEmail({
 			<Text style={bodyTextStyle}>
 				{isUrgent ? (
 					<>
-						Your Cronpilot trial expires <strong>tomorrow</strong> on{" "}
-						{trialEndsAtStr}. After that, your monitors will stop checking in
-						and alert delivery will be suspended until you upgrade.
+						Your Cronpilot trial expires <strong>tomorrow</strong> on {trialEndsAtStr}. After that,
+						your monitors will stop checking in and alert delivery will be suspended until you
+						upgrade.
 					</>
 				) : (
 					<>
-						Your Cronpilot trial expires in <strong>3 days</strong> on{" "}
-						{trialEndsAtStr}. Don&rsquo;t let your cron job monitoring go dark —
-						upgrade now to keep everything running without interruption.
+						Your Cronpilot trial expires in <strong>3 days</strong> on {trialEndsAtStr}. Don&rsquo;t
+						let your cron job monitoring go dark — upgrade now to keep everything running without
+						interruption.
 					</>
 				)}
 			</Text>
 
 			{/* What happens when trial ends */}
 			<div style={consequencesCardStyle}>
-				<Text style={consequencesHeadingStyle}>
-					What happens when your trial ends:
-				</Text>
+				<Text style={consequencesHeadingStyle}>What happens when your trial ends:</Text>
 				<div style={consequenceRowStyle}>
 					<span style={crossIconStyle}>✕</span>
-					<span style={consequenceTextStyle}>
-						Monitors stop receiving check-ins
-					</span>
+					<span style={consequenceTextStyle}>Monitors stop receiving check-ins</span>
 				</div>
 				<div style={consequenceRowStyle}>
 					<span style={crossIconStyle}>✕</span>
-					<span style={consequenceTextStyle}>
-						Alert emails and notifications are paused
-					</span>
+					<span style={consequenceTextStyle}>Alert emails and notifications are paused</span>
 				</div>
 				<div style={consequenceRowStyle}>
 					<span style={crossIconStyle}>✕</span>
-					<span style={consequenceTextStyle}>
-						Incident history becomes read-only
-					</span>
+					<span style={consequenceTextStyle}>Incident history becomes read-only</span>
 				</div>
 			</div>
 
@@ -104,10 +96,7 @@ export function TrialEndingEmail({
 			</div>
 
 			<div style={buttonWrapperStyle}>
-				<Button
-					href={upgradeUrlWithUtm}
-					style={isUrgent ? urgentButtonStyle : buttonStyle}
-				>
+				<Button href={upgradeUrlWithUtm} style={isUrgent ? urgentButtonStyle : buttonStyle}>
 					Upgrade now
 				</Button>
 			</div>

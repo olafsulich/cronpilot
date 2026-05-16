@@ -13,13 +13,9 @@ export function useMonitors(): {
 	isLoading: boolean;
 	mutate: KeyedMutator<MonitorResponse[]>;
 } {
-	const { data, isLoading, mutate } = useSWR<MonitorResponse[]>(
-		"/monitors",
-		fetcher,
-		{
-			refreshInterval: 30_000,
-		},
-	);
+	const { data, isLoading, mutate } = useSWR<MonitorResponse[]>("/monitors", fetcher, {
+		refreshInterval: 30_000,
+	});
 
 	return {
 		monitors: data ?? [],

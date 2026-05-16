@@ -1,12 +1,7 @@
 import { randomBytes } from "node:crypto";
 import type { Monitor } from "@cronpilot/db";
 import type { MonitorResponse, PaginatedResponse } from "@cronpilot/shared";
-import {
-	AppError,
-	computeMonitorStatus,
-	isValidCron,
-	PLANS,
-} from "@cronpilot/shared";
+import { AppError, computeMonitorStatus, isValidCron, PLANS } from "@cronpilot/shared";
 import { z } from "zod";
 import { prisma } from "../lib/prisma";
 
@@ -23,10 +18,7 @@ export const CreateMonitorSchema = z.object({
 
 export const UpdateMonitorSchema = z.object({
 	name: z.string().min(1).max(100).optional(),
-	schedule: z
-		.string()
-		.refine(isValidCron, "Invalid cron expression")
-		.optional(),
+	schedule: z.string().refine(isValidCron, "Invalid cron expression").optional(),
 	timezone: z.string().optional(),
 	gracePeriod: z.number().int().min(60).max(86400).optional(),
 });
@@ -44,9 +36,7 @@ export type PaginationInput = z.infer<typeof PaginationSchema>;
 // Mapping
 // ---------------------------------------------------------------------------
 
-function mapMonitor(
-	monitor: Monitor & { _count?: { checkins: number } },
-): MonitorResponse {
+function mapMonitor(monitor: Monitor & { _count?: { checkins: number } }): MonitorResponse {
 	return {
 		id: monitor.id,
 		teamId: monitor.teamId,
@@ -95,10 +85,7 @@ export async function listMonitors(
 	};
 }
 
-export async function getMonitor(
-	teamId: string,
-	monitorId: string,
-): Promise<MonitorResponse> {
+export async function getMonitor(teamId: string, monitorId: string): Promise<MonitorResponse> {
 	const monitor = await prisma.monitor.findFirst({
 		where: { id: monitorId, teamId },
 	});
@@ -170,10 +157,7 @@ export async function updateMonitor(
 	return mapMonitor(monitor);
 }
 
-export async function deleteMonitor(
-	teamId: string,
-	monitorId: string,
-): Promise<void> {
+export async function deleteMonitor(teamId: string, monitorId: string): Promise<void> {
 	const existing = await prisma.monitor.findFirst({
 		where: { id: monitorId, teamId },
 	});
@@ -184,10 +168,7 @@ export async function deleteMonitor(
 	await prisma.monitor.delete({ where: { id: monitorId } });
 }
 
-export async function pauseMonitor(
-	teamId: string,
-	monitorId: string,
-): Promise<MonitorResponse> {
+export async function pauseMonitor(teamId: string, monitorId: string): Promise<MonitorResponse> {
 	const existing = await prisma.monitor.findFirst({
 		where: { id: monitorId, teamId },
 	});
@@ -206,10 +187,7 @@ export async function pauseMonitor(
 	return mapMonitor(monitor);
 }
 
-export async function resumeMonitor(
-	teamId: string,
-	monitorId: string,
-): Promise<MonitorResponse> {
+export async function resumeMonitor(teamId: string, monitorId: string): Promise<MonitorResponse> {
 	const existing = await prisma.monitor.findFirst({
 		where: { id: monitorId, teamId },
 	});

@@ -4,11 +4,7 @@ import fp from "fastify-plugin";
 import { z } from "zod";
 import { authenticate } from "../hooks/authenticate";
 import { rateLimitApi } from "../hooks/rate-limit";
-import {
-	createCheckoutSession,
-	createPortalSession,
-	getBillingInfo,
-} from "../services/billing";
+import { createCheckoutSession, createPortalSession, getBillingInfo } from "../services/billing";
 
 const CheckoutSchema = z.object({
 	priceId: z.string().min(1),

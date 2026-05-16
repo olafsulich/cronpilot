@@ -74,19 +74,13 @@ export async function createCheckoutSession(
 	});
 
 	if (!session.url) {
-		throw new AppError(
-			"INTERNAL_ERROR",
-			"Failed to create Stripe checkout session",
-			500,
-		);
+		throw new AppError("INTERNAL_ERROR", "Failed to create Stripe checkout session", 500);
 	}
 
 	return { url: session.url };
 }
 
-export async function createPortalSession(
-	teamId: string,
-): Promise<{ url: string }> {
+export async function createPortalSession(teamId: string): Promise<{ url: string }> {
 	const stripe = getStripe();
 	const appUrl = process.env.APP_URL ?? "http://localhost:3000";
 
@@ -96,11 +90,7 @@ export async function createPortalSession(
 	});
 
 	if (!team.stripeCustomerId) {
-		throw new AppError(
-			"BAD_REQUEST",
-			"No billing account found. Please subscribe first.",
-			400,
-		);
+		throw new AppError("BAD_REQUEST", "No billing account found. Please subscribe first.", 400);
 	}
 
 	const session = await stripe.billingPortal.sessions.create({
@@ -117,9 +107,7 @@ export async function handleStripeEvent(event: Stripe.Event): Promise<void> {
 			const session = event.data.object as Stripe.Checkout.Session;
 			const teamId = session.metadata?.teamId;
 			const subscriptionId =
-				typeof session.subscription === "string"
-					? session.subscription
-					: session.subscription?.id;
+				typeof session.subscription === "string" ? session.subscription : session.subscription?.id;
 
 			if (!teamId || !subscriptionId) break;
 
@@ -169,9 +157,7 @@ export async function handleStripeEvent(event: Stripe.Event): Promise<void> {
 	}
 }
 
-function extractPlanFromSubscription(
-	subscription: Stripe.Subscription,
-): string {
+function extractPlanFromSubscription(subscription: Stripe.Subscription): string {
 	const item = subscription.items.data[0];
 	if (!item) return "free";
 
@@ -182,7 +168,6 @@ function extractPlanFromSubscription(
 			: "";
 
 	if (productName.includes("pro")) return "pro";
-	if (productName.includes("business") || productName.includes("team"))
-		return "business";
+	if (productName.includes("business") || productName.includes("team")) return "business";
 	return "free";
 }
