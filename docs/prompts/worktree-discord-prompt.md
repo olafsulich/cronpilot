@@ -1,7 +1,5 @@
 # Worktree A: Implement Discord Integration
 
-You are working in an isolated git worktree. A second agent is implementing a different feature (monitor pause/resume) in a parallel worktree at the same time. **Stay in your lane** — the boundary is defined in the spec.
-
 ## Task
 
 Implement the Discord integration end-to-end, following `docs/specs/discord-integration.md` exactly.

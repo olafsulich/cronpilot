@@ -1,7 +1,5 @@
 # Worktree B: Implement Monitor Pause / Resume
 
-You are working in an isolated git worktree. A second agent is implementing a different feature (Discord integration) in a parallel worktree at the same time. **Stay in your lane** — the boundary is defined in the spec.
-
 ## Task
 
 Implement monitor pause/resume end-to-end, following `docs/specs/monitor-pause-resume.md` exactly.

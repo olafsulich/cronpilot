@@ -72,4 +72,4 @@ Re-run the concurrency test. It must pass. If it doesn't, escalate **once more**
 
 ## Output
 
-A clean working tree on a branch named `fix/alert-deduplication`, all tests passing including the new concurrency test, with commits showing the phase progression. The commit log should make the advisor consultation visible — viewers of this branch should be able to see exactly where the executor escalated.
+A clean working tree on a branch named `fix/alert-deduplication`, all tests passing including the new concurrency test, with commits showing the phase progression. Phase 4's commit message must reference the advisor's recommendation so the escalation point is visible in the log.
