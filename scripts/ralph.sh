@@ -1,87 +1,56 @@
-#!/usr/bin/env bash
-# Ralph loop — runs a single PROMPT file against `claude` repeatedly until
-# the spec is satisfied or MAX_ITER is reached.
-#
-# Each iteration is a fresh Claude Code session. No memory carries over.
-# All state lives in the filesystem (the package being built + git history).
-#
-# Usage:
-#   ./scripts/ralph.sh
-#   PROMPT_FILE=docs/prompts/ralph-sdk-prompt.md ./scripts/ralph.sh
-#   WORKDIR=packages/sdk MAX_ITER=20 ./scripts/ralph.sh
-#
-# Stop conditions:
-#   - $WORKDIR/.ralph-done exists (the agent writes this when the spec is satisfied)
-#   - $WORKDIR/RALPH-BLOCKED.md exists (the agent reports it can't progress)
-#   - Iteration count reaches MAX_ITER
-#   - Ctrl-C
-#
-# WARNING: this script invokes `claude` with --dangerously-skip-permissions
-# so the loop runs unattended. Only run it on a feature branch in a worktree
-# you don't mind being mutated. Never run against `main`.
+#!/bin/bash
+set -e
 
-set -euo pipefail
+PROMPT_FILE=""
+TASKS_FILE=""
+PROGRESS_FILE=""
 
-PROMPT_FILE="${PROMPT_FILE:-docs/prompts/ralph-sdk-prompt.md}"
-WORKDIR="${WORKDIR:-packages/sdk}"
-MAX_ITER="${MAX_ITER:-30}"
-SLEEP_BETWEEN="${SLEEP_BETWEEN:-2}"
-LOG_DIR="${LOG_DIR:-logs/ralph}"
-
-if [ ! -f "$PROMPT_FILE" ]; then
-  echo "✗ Prompt file not found: $PROMPT_FILE" >&2
+usage() {
+  echo "Usage: $0 -p prompt -f tasks -r progress <iterations>"
   exit 1
-fi
+}
 
-current_branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "")"
-if [ "$current_branch" = "main" ] || [ "$current_branch" = "master" ]; then
-  echo "✗ Refusing to run Ralph on '$current_branch'. Switch to a feature branch first." >&2
-  exit 1
-fi
-
-mkdir -p "$WORKDIR" "$LOG_DIR"
-
-start_commit="$(git rev-parse HEAD 2>/dev/null || echo "no-commit")"
-
-iter=0
-while [ "$iter" -lt "$MAX_ITER" ]; do
-  iter=$((iter + 1))
-  log="$LOG_DIR/iter-$(printf '%03d' "$iter").log"
-
-  printf '\n═══ Ralph iteration %d / %d ═══\n' "$iter" "$MAX_ITER"
-  printf '  prompt:  %s\n' "$PROMPT_FILE"
-  printf '  workdir: %s\n' "$WORKDIR"
-  printf '  log:     %s\n' "$log"
-
-  if [ -f "$WORKDIR/.ralph-done" ]; then
-    printf '\n✓ Found %s/.ralph-done — Ralph reports the spec is satisfied.\n' "$WORKDIR"
-    break
-  fi
-
-  if [ -f "$WORKDIR/RALPH-BLOCKED.md" ]; then
-    printf '\n⚠ Found %s/RALPH-BLOCKED.md — Ralph reports it cannot progress.\n' "$WORKDIR"
-    printf '  Inspect the file and resolve the block before re-running.\n'
-    break
-  fi
-
-  if ! cat "$PROMPT_FILE" | claude --dangerously-skip-permissions 2>&1 | tee "$log"; then
-    printf '⚠ Iteration %d exited non-zero. Continuing — Ralph absorbs failures.\n' "$iter"
-  fi
-
-  sleep "$SLEEP_BETWEEN"
+while getopts ":p:f:r:" opt; do
+  case $opt in
+    p) PROMPT_FILE="$OPTARG" ;;
+    f) TASKS_FILE="$OPTARG" ;;
+    r) PROGRESS_FILE="$OPTARG" ;;
+    *) usage ;;
+  esac
 done
+shift $((OPTIND - 1))
 
-end_commit="$(git rev-parse HEAD 2>/dev/null || echo "no-commit")"
-commits_made="$(git rev-list --count "$start_commit..$end_commit" 2>/dev/null || echo "?")"
+{ [ -z "$PROMPT_FILE" ] || [ -z "$TASKS_FILE" ] || [ -z "$PROGRESS_FILE" ] || [ -z "$1" ]; } && usage
 
-printf '\n──────────────────────────────────────────────\n'
-if [ -f "$WORKDIR/.ralph-done" ]; then
-  printf 'Result: ✓ done after %d iteration(s), %s commit(s).\n' "$iter" "$commits_made"
-elif [ -f "$WORKDIR/RALPH-BLOCKED.md" ]; then
-  printf 'Result: ⚠ blocked after %d iteration(s), %s commit(s).\n' "$iter" "$commits_made"
-elif [ "$iter" -ge "$MAX_ITER" ]; then
-  printf 'Result: ⏱ MAX_ITER reached. %d iteration(s), %s commit(s). Inspect %s.\n' \
-    "$iter" "$commits_made" "$LOG_DIR"
-else
-  printf 'Result: stopped after %d iteration(s), %s commit(s).\n' "$iter" "$commits_made"
-fi
+read -r -d '' RALPH_INSTRUCTIONS <<'EOF'
+You are in a Ralph loop — a fresh session runs for each iteration with no memory of previous runs.
+State lives in the task file and progress file shown above.
+
+Each iteration:
+1. Read the task file — find the first entry with "passes": false.
+2. Read the progress file — the last entry tells you what was done previously.
+3. Health check: run build and tests. If anything previously passing now fails, fix it first.
+4. Pick the first task with "passes": false. Work on exactly one task per iteration.
+5. Implement only what is needed to make that task pass.
+6. Verify it passes (build / test / typecheck as appropriate). Fix failures before proceeding.
+7. Set "passes": true for that task in the task file.
+8. Append to the progress file: iteration number, task completed, one-line summary, build/test health.
+9. Commit with a conventional commit message.
+10. If all tasks have "passes": true and the build is clean, output <promise>COMPLETE</promise> and stop.
+
+Rules:
+- One task per iteration. Do not skip ahead.
+- Never remove or reorder entries in the task file. Only flip "passes" from false to true.
+- No --no-verify, no git push, no --force.
+- If something genuinely blocks progress, output a short explanation of what is blocked and stop.
+EOF
+
+for ((i=1; i<=$1; i++)); do
+  result=$(claude --dangerously-skip-permissions -p "$RALPH_INSTRUCTIONS @$TASKS_FILE @$PROGRESS_FILE $(cat "$PROMPT_FILE")")
+  echo "$result"
+
+  if [[ "$result" == *"<promise>COMPLETE</promise>"* ]]; then
+    echo "Complete after $i iterations."
+    exit 0
+  fi
+done
