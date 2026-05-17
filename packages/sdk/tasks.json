@@ -27,7 +27,7 @@
 	{
 		"id": "retry-backoff",
 		"description": "5xx and network errors retry up to retries times (default 2) with 200ms * 2^attempt exponential backoff; 4xx does not retry",
-		"passes": false
+		"passes": true
 	},
 	{
 		"id": "timeout",

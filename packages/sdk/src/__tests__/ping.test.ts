@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Cronpilot, CronpilotClientError, CronpilotServerError } from "../index.js";
 
 const mockFetch = vi.fn<typeof fetch>();
@@ -68,5 +68,56 @@ describe("error classes", () => {
 		const err = await client.ping().catch((e) => e);
 		expect(err).toBeInstanceOf(CronpilotServerError);
 		expect(err.cause).toBe(networkErr);
+	});
+});
+
+describe("retry-backoff", () => {
+	beforeEach(() => {
+		vi.useFakeTimers();
+	});
+
+	afterEach(() => {
+		vi.useRealTimers();
+	});
+
+	it("5xx retries up to retries times (default 2) for 3 total attempts", async () => {
+		mockFetch.mockResolvedValue(new Response(null, { status: 500 }));
+		const client = new Cronpilot({ token: "mon_test" });
+
+		const promise = client.ping().catch((e) => e);
+		await vi.runAllTimersAsync();
+		const err = await promise;
+
+		expect(mockFetch).toHaveBeenCalledTimes(3);
+		expect(err).toBeInstanceOf(CronpilotServerError);
+	});
+
+	it("network errors retry then throw CronpilotServerError", async () => {
+		mockFetch.mockRejectedValue(new TypeError("fetch failed"));
+		const client = new Cronpilot({ token: "mon_test" });
+
+		const promise = client.ping().catch((e) => e);
+		await vi.runAllTimersAsync();
+		const err = await promise;
+
+		expect(mockFetch).toHaveBeenCalledTimes(3);
+		expect(err).toBeInstanceOf(CronpilotServerError);
+	});
+
+	it("uses 200ms * 2^attempt exponential backoff between retries", async () => {
+		mockFetch.mockResolvedValue(new Response(null, { status: 500 }));
+		const client = new Cronpilot({ token: "mon_test", retries: 2 });
+
+		const promise = client.ping().catch(() => {});
+
+		expect(mockFetch).toHaveBeenCalledTimes(1);
+
+		await vi.advanceTimersByTimeAsync(200);
+		expect(mockFetch).toHaveBeenCalledTimes(2);
+
+		await vi.advanceTimersByTimeAsync(400);
+		expect(mockFetch).toHaveBeenCalledTimes(3);
+
+		await promise;
 	});
 });

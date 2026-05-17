@@ -14,3 +14,6 @@ Created packages/sdk/src/__tests__/ping.test.ts with 2 happy-path cases: default
 
 ## Iteration 5 — error-classes
 Added 3 tests verifying error class contract: 4xx throws CronpilotClientError with correct status and no retry (fetch called once); 5xx throws CronpilotServerError with status; network error throws CronpilotServerError with cause. Source exports were already correct. Build/test health: 5/5 tests pass.
+
+## Iteration 6 — retry-backoff
+Added 3 tests in a new "retry-backoff" describe block using vi.useFakeTimers(): 5xx retries default 2 times (3 total fetch calls); network errors retry similarly; exponential backoff advances 200ms then 400ms between calls. Implementation was already correct. Build/test health: 8/8 tests pass.
