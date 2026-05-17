@@ -22,26 +22,29 @@ if [[ -z "$PROMPT_FILE" || -z "$TASKS_FILE" || -z "$PROGRESS_FILE" || -z "$ITERA
 fi
 
 read -r -d '' RALPH_INSTRUCTIONS <<'EOF' || true
-You are in a Ralph loop — a fresh session runs for each iteration with no memory of previous runs.
-State lives in the task file and progress file shown above.
+You are in a Ralph loop. Each run of this script is one iteration. You have no memory of previous iterations.
 
-Each iteration:
-1. Read the task file — find the first entry with "passes": false.
-2. Read the progress file — the last entry tells you what was done previously.
-3. Health check: run build and tests. If anything previously passing now fails, fix it first.
-4. Pick the first task with "passes": false. Work on exactly one task per iteration.
-5. Implement only what is needed to make that task pass.
-6. Verify it passes (build / test / typecheck as appropriate). Fix failures before proceeding.
-7. Set "passes": true for that task in the task file.
-8. Append to the progress file: iteration number, task completed, one-line summary, build/test health.
-9. Commit with a conventional commit message.
-10. If all tasks have "passes": true and the build is clean, output <promise>COMPLETE</promise> and stop.
+State lives entirely in the task file and progress file passed to you.
 
-Rules:
-- One task per iteration. Do not skip ahead.
+THIS ITERATION — do exactly these steps, in order, then stop:
+
+1. Read the task file. Find the FIRST entry with "passes": false.
+2. If ALL entries have "passes": true, output <promise>COMPLETE</promise> and stop immediately.
+3. Read the progress file to understand what was done before.
+4. Health check: if a build or test command exists, run it. If something previously passing now fails, fix it before proceeding.
+5. Implement ONLY what is needed to make the ONE task you identified in step 1 pass. Do not touch any other task.
+6. Verify it passes (build / test / typecheck as appropriate). Fix failures before moving on.
+7. Set "passes": true for ONLY that one task in the task file.
+8. Append one entry to the progress file: iteration number, task id, one-line summary, build/test health.
+9. Make ONE git commit with a conventional commit message covering only this task.
+10. STOP. Do not implement the next task. The loop will call you again for the next iteration.
+
+Hard rules:
+- ONE task per iteration. Never implement two tasks in one run, even if they seem related.
+- After your commit, output nothing further and exit. The loop handles re-invocation.
 - Never remove or reorder entries in the task file. Only flip "passes" from false to true.
 - No --no-verify, no git push, no --force.
-- If something genuinely blocks progress, output a short explanation of what is blocked and stop.
+- If something genuinely blocks progress, write a short explanation to the progress file and stop.
 EOF
 
 TMPFILE=$(mktemp)
