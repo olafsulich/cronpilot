@@ -2,7 +2,7 @@
 	{
 		"id": "package-scaffold",
 		"description": "packages/sdk/package.json exists: name @cronpilot/sdk, version 0.1.0, type module, correct main/types/exports fields, vitest/typescript/@types/node as devDeps",
-		"passes": false
+		"passes": true
 	},
 	{
 		"id": "tsconfig",
