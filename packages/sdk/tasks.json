@@ -12,7 +12,7 @@
 	{
 		"id": "source-exports",
 		"description": "packages/sdk/src/index.ts exports Cronpilot, CronpilotClientError, CronpilotServerError",
-		"passes": false
+		"passes": true
 	},
 	{
 		"id": "ping-happy-path",
