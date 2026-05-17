@@ -1,4 +1,4 @@
-export type IntegrationType = "slack" | "pagerduty" | "webhook" | "email";
+export type IntegrationType = "slack" | "pagerduty" | "webhook" | "email" | "discord";
 
 export interface SlackConfig {
 	webhookUrl: string;
@@ -18,7 +18,17 @@ export interface EmailConfig {
 	address: string;
 }
 
-export type IntegrationConfig = SlackConfig | PagerDutyConfig | WebhookConfig | EmailConfig;
+export interface DiscordConfig {
+	webhookUrl: string;
+	channelName?: string;
+}
+
+export type IntegrationConfig =
+	| SlackConfig
+	| PagerDutyConfig
+	| WebhookConfig
+	| EmailConfig
+	| DiscordConfig;
 
 export interface Integration {
 	id: string;

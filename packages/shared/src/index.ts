@@ -53,6 +53,7 @@ export {
 } from "./types/api";
 export type {
 	AlertRule,
+	DiscordConfig,
 	EmailConfig,
 	Integration,
 	IntegrationConfig,

@@ -28,11 +28,19 @@ export const EmailConfigSchema = z.object({
 	email: z.string().email(),
 });
 
+export const DiscordConfigSchema = z.object({
+	webhookUrl: z
+		.string()
+		.regex(/^https:\/\/discord\.com\/api\/webhooks\//, "Must be a Discord webhook URL"),
+	channelName: z.string().optional(),
+});
+
 export const CreateIntegrationSchema = z.discriminatedUnion("type", [
 	z.object({ type: z.literal("slack"), config: SlackConfigSchema }),
 	z.object({ type: z.literal("pagerduty"), config: PagerDutyConfigSchema }),
 	z.object({ type: z.literal("webhook"), config: WebhookConfigSchema }),
 	z.object({ type: z.literal("email"), config: EmailConfigSchema }),
+	z.object({ type: z.literal("discord"), config: DiscordConfigSchema }),
 ]);
 
 export type CreateIntegrationInput = z.infer<typeof CreateIntegrationSchema>;
@@ -84,6 +92,13 @@ function maskConfig(type: string, config: Record<string, unknown>): Record<strin
 			...(secret !== undefined && { secret: "***" }),
 		};
 	}
+	if (type === "discord") {
+		const url = String(config.webhookUrl ?? "");
+		return {
+			...config,
+			webhookUrl: url.length > 20 ? `${url.substring(0, 20)}...` : "***",
+		};
+	}
 	return config;
 }
 
@@ -130,6 +145,8 @@ function buildIntegrationName(input: CreateIntegrationInput): string {
 			return `Webhook (${new URL(input.config.url).hostname})`;
 		case "email":
 			return `Email (${input.config.email})`;
+		case "discord":
+			return `Discord${input.config.channelName ? ` (${input.config.channelName})` : ""}`;
 	}
 }
 
@@ -232,6 +249,24 @@ export async function testIntegration(
 				success: true,
 				message: "Email integrations are verified during delivery",
 			};
+		}
+
+		if (integration.type === "discord") {
+			const webhookUrl = String(config.webhookUrl ?? "");
+			const res = await fetch(webhookUrl, {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					content: "✅ Cronpilot test notification — your Discord integration is working!",
+				}),
+			});
+			if (!res.ok) {
+				return {
+					success: false,
+					message: `Discord returned status ${res.status}`,
+				};
+			}
+			return { success: true };
 		}
 
 		return { success: false, message: "Unknown integration type" };

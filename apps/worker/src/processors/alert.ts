@@ -3,6 +3,7 @@ import { prisma } from "@cronpilot/db";
 import { AlertFailedEmail, AlertMissedEmail, renderEmail } from "@cronpilot/emails";
 import type {
 	AlertJobData,
+	DiscordConfig,
 	EmailConfig,
 	PagerDutyConfig,
 	SlackConfig,
@@ -146,6 +147,9 @@ export async function processAlert(job: Job<AlertJobData>): Promise<void> {
 						dashboardUrl,
 						jobLog,
 					);
+					break;
+				case "discord":
+					await dispatchDiscord(config as DiscordConfig, monitor.name, alertType, jobLog);
 					break;
 				default: {
 					const _exhaustive: never = integration.type;
@@ -312,4 +316,18 @@ async function dispatchEmail(
 		html,
 		text,
 	});
+}
+
+async function dispatchDiscord(
+	config: DiscordConfig,
+	monitorName: string,
+	alertType: "missed" | "failed",
+	jobLog: ReturnType<typeof logger.child>,
+): Promise<void> {
+	const status = alertType === "missed" ? "late" : "down";
+	const timestamp = new Date().toISOString();
+	const content = `🚨 Monitor \`${monitorName}\` is ${status}. Last check-in: ${timestamp}.`;
+
+	jobLog.debug({ webhookUrl: "[redacted]" }, "posting to Discord");
+	await axios.post(config.webhookUrl, { content }, { timeout: 10_000 });
 }

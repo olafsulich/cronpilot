@@ -60,6 +60,14 @@ export const IntegrationCreateSchema = z.discriminatedUnion("type", [
 		name: z.string().min(1).max(255),
 		address: z.string().email(),
 	}),
+	z.object({
+		type: z.literal("discord"),
+		name: z.string().min(1).max(255),
+		webhookUrl: z
+			.string()
+			.regex(/^https:\/\/discord\.com\/api\/webhooks\//, "Must be a Discord webhook URL"),
+		channelName: z.string().optional(),
+	}),
 ]);
 
 export type IntegrationCreateParams = z.infer<typeof IntegrationCreateSchema>;

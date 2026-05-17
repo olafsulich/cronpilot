@@ -6,6 +6,7 @@
 		"dev": "tsx watch src/worker.ts",
 		"build": "tsc",
 		"start": "node dist/worker.js",
+		"test": "vitest run",
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
@@ -22,6 +23,7 @@
 	"devDependencies": {
 		"@types/node": "^20.14.0",
 		"tsx": "^4.15.4",
-		"typescript": "^5.4.5"
+		"typescript": "^5.4.5",
+		"vitest": "^1.6.0"
 	}
 }

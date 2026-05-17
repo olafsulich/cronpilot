@@ -3,7 +3,18 @@
 import type { Integration, IntegrationCreateParams } from "@cronpilot/shared";
 import { IntegrationCreateSchema } from "@cronpilot/shared";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Bell, Globe, Hash, Loader2, Mail, Plus, Shield, Trash2, X } from "lucide-react";
+import {
+	Bell,
+	Globe,
+	Hash,
+	Loader2,
+	Mail,
+	MessageSquare,
+	Plus,
+	Shield,
+	Trash2,
+	X,
+} from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import useSWR from "swr";
@@ -19,6 +30,7 @@ const INTEGRATION_ICONS: Record<string, React.ReactNode> = {
 	pagerduty: <Shield className="h-5 w-5" />,
 	webhook: <Globe className="h-5 w-5" />,
 	email: <Mail className="h-5 w-5" />,
+	discord: <MessageSquare className="h-5 w-5" />,
 };
 
 const INTEGRATION_LABELS: Record<string, string> = {
@@ -26,9 +38,10 @@ const INTEGRATION_LABELS: Record<string, string> = {
 	pagerduty: "PagerDuty",
 	webhook: "Webhook",
 	email: "Email",
+	discord: "Discord",
 };
 
-type IntegrationType = "slack" | "pagerduty" | "webhook" | "email";
+type IntegrationType = "slack" | "pagerduty" | "webhook" | "email" | "discord";
 
 export default function IntegrationsPage() {
 	const [showModal, setShowModal] = useState(false);
@@ -192,8 +205,8 @@ function AddIntegrationModal({
 
 				<div className="p-6">
 					{/* Type selector */}
-					<div className="grid grid-cols-4 gap-2 mb-6">
-						{(["slack", "pagerduty", "webhook", "email"] as const).map((type) => (
+					<div className="grid grid-cols-3 gap-2 mb-6">
+						{(["slack", "pagerduty", "webhook", "email", "discord"] as const).map((type) => (
 							<button
 								key={type}
 								type="button"
@@ -312,6 +325,33 @@ function AddIntegrationModal({
 									placeholder="alerts@example.com"
 								/>
 							</FormField>
+						)}
+
+						{selectedType === "discord" && (
+							<>
+								<FormField
+									label="Webhook URL"
+									error={(errors as { webhookUrl?: { message?: string } }).webhookUrl?.message}
+								>
+									<input
+										{...register("webhookUrl" as keyof IntegrationCreateParams)}
+										type="url"
+										className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition"
+										placeholder="https://discord.com/api/webhooks/..."
+									/>
+								</FormField>
+								<FormField
+									label="Channel name (optional)"
+									error={(errors as { channelName?: { message?: string } }).channelName?.message}
+								>
+									<input
+										{...register("channelName" as keyof IntegrationCreateParams)}
+										type="text"
+										className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition"
+										placeholder="#alerts"
+									/>
+								</FormField>
+							</>
 						)}
 
 						<div className="flex items-center gap-3 pt-2">
