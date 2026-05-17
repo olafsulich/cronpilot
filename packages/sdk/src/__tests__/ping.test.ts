@@ -71,6 +71,35 @@ describe("error classes", () => {
 	});
 });
 
+describe("timeout", () => {
+	it("passes AbortSignal.timeout(timeout) to fetch and wraps timeout error as CronpilotServerError", async () => {
+		const timeoutSpy = vi.spyOn(AbortSignal, "timeout");
+		const abortError = new DOMException("The operation was aborted", "TimeoutError");
+		mockFetch.mockRejectedValue(abortError);
+
+		const client = new Cronpilot({ token: "mon_test", timeout: 1000, retries: 0 });
+		const err = await client.ping().catch((e) => e);
+
+		expect(timeoutSpy).toHaveBeenCalledWith(1000);
+		expect(err).toBeInstanceOf(CronpilotServerError);
+		expect(err.cause).toBe(abortError);
+
+		timeoutSpy.mockRestore();
+	});
+
+	it("defaults to 5000ms timeout", async () => {
+		const timeoutSpy = vi.spyOn(AbortSignal, "timeout");
+		mockFetch.mockResolvedValueOnce(new Response(null, { status: 200 }));
+
+		const client = new Cronpilot({ token: "mon_test" });
+		await client.ping();
+
+		expect(timeoutSpy).toHaveBeenCalledWith(5000);
+
+		timeoutSpy.mockRestore();
+	});
+});
+
 describe("retry-backoff", () => {
 	beforeEach(() => {
 		vi.useFakeTimers();

@@ -17,3 +17,6 @@ Added 3 tests verifying error class contract: 4xx throws CronpilotClientError wi
 
 ## Iteration 6 — retry-backoff
 Added 3 tests in a new "retry-backoff" describe block using vi.useFakeTimers(): 5xx retries default 2 times (3 total fetch calls); network errors retry similarly; exponential backoff advances 200ms then 400ms between calls. Implementation was already correct. Build/test health: 8/8 tests pass.
+
+## Iteration 7 — timeout
+Added 2 tests in a new "timeout" describe block using vi.spyOn(AbortSignal, 'timeout'): verifies AbortSignal.timeout is called with the configured timeout value (1000ms) and that a DOMException timeout error is wrapped as CronpilotServerError with cause; also verifies default of 5000ms. Implementation was already correct. Build/test health: 10/10 tests pass.

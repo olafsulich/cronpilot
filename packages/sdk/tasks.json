@@ -32,7 +32,7 @@
 	{
 		"id": "timeout",
 		"description": "AbortSignal.timeout(timeout) enforced per attempt; default 5000ms",
-		"passes": false
+		"passes": true
 	},
 	{
 		"id": "build",
