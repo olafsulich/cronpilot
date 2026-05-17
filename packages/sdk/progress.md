@@ -11,3 +11,6 @@ Created packages/sdk/src/index.ts exporting Cronpilot, CronpilotClientError, and
 
 ## Iteration 4 — ping-happy-path
 Created packages/sdk/src/__tests__/ping.test.ts with 2 happy-path cases: default URL + status:ok body, and status/duration/exitCode body fields. Implementation already existed; tests confirm behavior. Build/test health: 2/2 tests pass, typecheck clean.
+
+## Iteration 5 — error-classes
+Added 3 tests verifying error class contract: 4xx throws CronpilotClientError with correct status and no retry (fetch called once); 5xx throws CronpilotServerError with status; network error throws CronpilotServerError with cause. Source exports were already correct. Build/test health: 5/5 tests pass.

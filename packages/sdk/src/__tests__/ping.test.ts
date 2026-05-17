@@ -39,3 +39,34 @@ describe("ping happy path", () => {
 		});
 	});
 });
+
+describe("error classes", () => {
+	it("4xx throws CronpilotClientError with status and does not retry", async () => {
+		mockFetch.mockResolvedValue(new Response(null, { status: 422 }));
+		const client = new Cronpilot({ token: "mon_test", retries: 2 });
+
+		const err = await client.ping().catch((e) => e);
+		expect(err).toBeInstanceOf(CronpilotClientError);
+		expect(err.status).toBe(422);
+		expect(mockFetch).toHaveBeenCalledTimes(1);
+	});
+
+	it("5xx throws CronpilotServerError with status after exhausting retries", async () => {
+		mockFetch.mockResolvedValue(new Response(null, { status: 503 }));
+		const client = new Cronpilot({ token: "mon_test", retries: 0 });
+
+		const err = await client.ping().catch((e) => e);
+		expect(err).toBeInstanceOf(CronpilotServerError);
+		expect(err.status).toBe(503);
+	});
+
+	it("network error throws CronpilotServerError with cause", async () => {
+		const networkErr = new TypeError("fetch failed");
+		mockFetch.mockRejectedValue(networkErr);
+		const client = new Cronpilot({ token: "mon_test", retries: 0 });
+
+		const err = await client.ping().catch((e) => e);
+		expect(err).toBeInstanceOf(CronpilotServerError);
+		expect(err.cause).toBe(networkErr);
+	});
+});

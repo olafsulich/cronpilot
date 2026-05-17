@@ -22,7 +22,7 @@
 	{
 		"id": "error-classes",
 		"description": "CronpilotClientError (4xx, no retry, has status: number) and CronpilotServerError (5xx/network, has status?: number and cause?: unknown) exported",
-		"passes": false
+		"passes": true
 	},
 	{
 		"id": "retry-backoff",
