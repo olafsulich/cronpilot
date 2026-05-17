@@ -1,28 +1,27 @@
 #!/bin/bash
-set -e
+set -eo pipefail
 
 PROMPT_FILE=""
 TASKS_FILE=""
 PROGRESS_FILE=""
+ITERATIONS=""
 
-usage() {
-  echo "Usage: $0 -p prompt -f tasks -r progress <iterations>"
-  exit 1
-}
-
-while getopts ":p:f:r:" opt; do
+while getopts ":p:f:r:n:" opt; do
   case $opt in
     p) PROMPT_FILE="$OPTARG" ;;
     f) TASKS_FILE="$OPTARG" ;;
     r) PROGRESS_FILE="$OPTARG" ;;
-    *) usage ;;
+    n) ITERATIONS="$OPTARG" ;;
+    *) echo "Usage: $0 -p prompt -f tasks -r progress -n iterations" >&2; exit 1 ;;
   esac
 done
-shift $((OPTIND - 1))
 
-{ [ -z "$PROMPT_FILE" ] || [ -z "$TASKS_FILE" ] || [ -z "$PROGRESS_FILE" ] || [ -z "$1" ]; } && usage
+if [[ -z "$PROMPT_FILE" || -z "$TASKS_FILE" || -z "$PROGRESS_FILE" || -z "$ITERATIONS" ]]; then
+  echo "Usage: $0 -p prompt -f tasks -r progress -n iterations" >&2
+  exit 1
+fi
 
-read -r -d '' RALPH_INSTRUCTIONS <<'EOF'
+read -r -d '' RALPH_INSTRUCTIONS <<'EOF' || true
 You are in a Ralph loop — a fresh session runs for each iteration with no memory of previous runs.
 State lives in the task file and progress file shown above.
 
@@ -45,8 +44,12 @@ Rules:
 - If something genuinely blocks progress, output a short explanation of what is blocked and stop.
 EOF
 
-for ((i=1; i<=$1; i++)); do
-  result=$(claude --dangerously-skip-permissions -p "$RALPH_INSTRUCTIONS @$TASKS_FILE @$PROGRESS_FILE $(cat "$PROMPT_FILE")")
+for ((i=1; i<=ITERATIONS; i++)); do
+  echo "=== Iteration $i/$ITERATIONS ==="
+  result=$(claude --dangerously-skip-permissions -p "$RALPH_INSTRUCTIONS @$TASKS_FILE @$PROGRESS_FILE $(cat "$PROMPT_FILE")") || {
+    echo "claude exited with code $? on iteration $i" >&2
+    exit 1
+  }
   echo "$result"
 
   if [[ "$result" == *"<promise>COMPLETE</promise>"* ]]; then
