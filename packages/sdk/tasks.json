@@ -37,7 +37,7 @@
 	{
 		"id": "build",
 		"description": "pnpm --filter @cronpilot/sdk build succeeds; dist/index.js and dist/index.d.ts are produced",
-		"passes": false
+		"passes": true
 	},
 	{
 		"id": "tests",

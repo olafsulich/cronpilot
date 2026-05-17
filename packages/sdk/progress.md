@@ -20,3 +20,6 @@ Added 3 tests in a new "retry-backoff" describe block using vi.useFakeTimers(): 
 
 ## Iteration 7 — timeout
 Added 2 tests in a new "timeout" describe block using vi.spyOn(AbortSignal, 'timeout'): verifies AbortSignal.timeout is called with the configured timeout value (1000ms) and that a DOMException timeout error is wrapped as CronpilotServerError with cause; also verifies default of 5000ms. Implementation was already correct. Build/test health: 10/10 tests pass.
+
+## Iteration 8 — build
+Fixed tsconfig.json to allow emit: added `"allowImportingTsExtensions": false` (base sets it true, which blocks emit) and excluded `**/*.test.ts` from the build so test files don't end up in dist/. Build now produces dist/index.js and dist/index.d.ts cleanly. Build/test health: build succeeds, dist/index.js + dist/index.d.ts produced.
