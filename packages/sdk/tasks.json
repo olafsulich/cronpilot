@@ -42,7 +42,7 @@
 	{
 		"id": "tests",
 		"description": "pnpm --filter @cronpilot/sdk test passes all six cases: default ping URL, body fields (status/duration/exitCode), 4xx no-retry, 5xx retry, network retry, timeout",
-		"passes": false
+		"passes": true
 	},
 	{
 		"id": "typecheck",

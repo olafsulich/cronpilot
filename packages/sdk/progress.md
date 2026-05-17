@@ -23,3 +23,6 @@ Added 2 tests in a new "timeout" describe block using vi.spyOn(AbortSignal, 'tim
 
 ## Iteration 8 — build
 Fixed tsconfig.json to allow emit: added `"allowImportingTsExtensions": false` (base sets it true, which blocks emit) and excluded `**/*.test.ts` from the build so test files don't end up in dist/. Build now produces dist/index.js and dist/index.d.ts cleanly. Build/test health: build succeeds, dist/index.js + dist/index.d.ts produced.
+
+## Iteration 9 — tests
+All 10 tests were already passing from prior iterations (ping happy path, body fields, 4xx no-retry, 5xx retry, network retry, timeout). Marked task as passes: true. Build/test health: 10/10 tests pass, typecheck clean.
