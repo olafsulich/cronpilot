@@ -1,7 +1,7 @@
 ---
 name: test-reviewer
-description: Reviews code changes for test coverage and adherence to project test conventions. Focuses on integration vs unit test placement, edge cases, real-DB testing for API, and jsdom + Testing Library patterns for web. Read-only — produces findings, never edits.
-tools: Read, Grep, Glob, LS, Bash
+description: Reviews code changes for test coverage and adherence to project test conventions. Focuses on integration vs unit test placement, edge cases, real-DB testing for API, and jsdom + Testing Library patterns for web. Produces findings and writes review reports — never edits source files.
+tools: Read, Grep, Glob, LS, Bash, Write, Edit
 model: sonnet
 ---
 

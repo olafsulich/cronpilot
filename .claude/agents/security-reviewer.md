@@ -1,7 +1,7 @@
 ---
 name: security-reviewer
-description: Reviews code changes from a security perspective. Focuses on authentication, encryption of secrets, input validation, multi-tenant isolation, and defense against common web vulnerabilities. Read-only — produces findings, never edits.
-tools: Read, Grep, Glob, LS
+description: Reviews code changes from a security perspective. Focuses on authentication, encryption of secrets, input validation, multi-tenant isolation, and defense against common web vulnerabilities. Produces findings and writes review reports — never edits source files.
+tools: Read, Grep, Glob, LS, Write, Edit
 model: sonnet
 ---
 
