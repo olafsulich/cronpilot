@@ -57,9 +57,7 @@ describe("Discord integration form", () => {
 		render(<IntegrationsPage />);
 		openModal();
 		selectDiscord();
-		expect(
-			screen.getByPlaceholderText("https://discord.com/api/webhooks/..."),
-		).toBeInTheDocument();
+		expect(screen.getByPlaceholderText("https://discord.com/api/webhooks/...")).toBeInTheDocument();
 	});
 
 	it("calls apiClient.post with the correct discord payload on submit", async () => {
