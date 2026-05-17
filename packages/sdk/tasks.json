@@ -17,7 +17,7 @@
 	{
 		"id": "ping-happy-path",
 		"description": "Cronpilot.ping() POSTs to correct URL with JSON body, returns Promise<void> on 2xx, default status ok",
-		"passes": false
+		"passes": true
 	},
 	{
 		"id": "error-classes",

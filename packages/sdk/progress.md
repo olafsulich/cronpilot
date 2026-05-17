@@ -8,3 +8,6 @@ Created packages/sdk/tsconfig.json extending ../../tsconfig.base.json with outDi
 
 ## Iteration 3 — source-exports
 Created packages/sdk/src/index.ts exporting Cronpilot, CronpilotClientError, and CronpilotServerError with full ping() implementation (retry/backoff/timeout). Fixed tsconfig to add lib: ["ES2022", "DOM"] for fetch/AbortSignal/setTimeout types; added override to cause field; used conditional assignment for optional status to satisfy exactOptionalPropertyTypes. Build/test health: typecheck passes.
+
+## Iteration 4 — ping-happy-path
+Created packages/sdk/src/__tests__/ping.test.ts with 2 happy-path cases: default URL + status:ok body, and status/duration/exitCode body fields. Implementation already existed; tests confirm behavior. Build/test health: 2/2 tests pass, typecheck clean.
