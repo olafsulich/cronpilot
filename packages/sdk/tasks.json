@@ -7,7 +7,7 @@
 	{
 		"id": "tsconfig",
 		"description": "packages/sdk/tsconfig.json exists extending the workspace base pattern (see packages/shared/tsconfig.json)",
-		"passes": false
+		"passes": true
 	},
 	{
 		"id": "source-exports",
