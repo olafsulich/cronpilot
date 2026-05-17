@@ -19,44 +19,44 @@ Before spawning any teammates, create these tasks in this order:
 1. `round-1-security` — unblocked
 2. `round-1-perf` — unblocked
 3. `round-1-test` — unblocked
-4. `round-2-cross-challenge` — blocked on tasks 1, 2, and 3
-5. `round-3-synthesis` — blocked on task 4
+4. `round-2-security` — blocked on tasks 1, 2, and 3
+5. `round-2-perf` — blocked on tasks 1, 2, and 3
+6. `round-2-test` — blocked on tasks 1, 2, and 3
+7. `round-3-synthesis` — blocked on tasks 4, 5, and 6
 
 ### Step 2 — Spawn three reviewers (parallel)
 
 Spawn three teammates using the `security-reviewer`, `perf-reviewer`, and `test-reviewer` agent definitions. Name them `security`, `perf`, and `test`.
 
-Use these spawn prompts verbatim, substituting the bracketed values:
+Use these spawn prompts verbatim:
 
 **For `security`:**
 
-> You are the security reviewer for the Discord integration PR. Read the spec at `docs/specs/discord-integration.md`, the diff (`git diff main...HEAD --stat`, then read changed files), and conventions in `CLAUDE.md` and `docs/agent/`. Produce a security review following your agent definition's format — findings with severity ratings, then a final verdict: `approve`, `approve-with-changes`, or `block`. Write your full report to `docs/review-round1-security.md`. Do not read the other reviewers' reports yet. When done, mark task `round-1-security` complete, then **stay available** — the lead will send you Round 2 instructions via message.
+> You are the security reviewer for the Discord integration PR. Your work has two rounds — complete both before finishing.
+>
+> **Round 1 — task `round-1-security`:** Read the spec at `docs/specs/discord-integration.md`, the diff (`git diff main...HEAD --stat`, then read changed files), and conventions in `CLAUDE.md` and `docs/agent/`. Produce a security review following your agent definition's format — findings with severity ratings, then a final verdict: `approve`, `approve-with-changes`, or `block`. Write your full report to `docs/review-round1-security.md`. Do not read the other reviewers' reports yet. Mark `round-1-security` complete.
+>
+> **Round 2 — task `round-2-security`:** This task is blocked until all three Round 1 tasks complete. Once it unblocks, claim it. Read the other two reports: `docs/review-round1-perf.md` and `docs/review-round1-test.md`. Challenge at least one finding from each report — name the reviewer, the specific finding, and give a concrete reason. State a revised verdict if your position changed. Append everything to `docs/review-round1-security.md` under a `## Round 2 Challenges` heading. Mark `round-2-security` complete.
 
 **For `perf`:**
 
-> You are the performance reviewer for the Discord integration PR. Read the spec at `docs/specs/discord-integration.md`, the diff (`git diff main...HEAD --stat`, then read changed files), and conventions in `CLAUDE.md` and `docs/agent/`. Produce a performance review following your agent definition's format — findings with severity ratings, then a final verdict: `approve`, `approve-with-changes`, or `block`. Write your full report to `docs/review-round1-perf.md`. Do not read the other reviewers' reports yet. When done, mark task `round-1-perf` complete, then **stay available** — the lead will send you Round 2 instructions via message.
+> You are the performance reviewer for the Discord integration PR. Your work has two rounds — complete both before finishing.
+>
+> **Round 1 — task `round-1-perf`:** Read the spec at `docs/specs/discord-integration.md`, the diff (`git diff main...HEAD --stat`, then read changed files), and conventions in `CLAUDE.md` and `docs/agent/`. Produce a performance review following your agent definition's format — findings with severity ratings, then a final verdict: `approve`, `approve-with-changes`, or `block`. Write your full report to `docs/review-round1-perf.md`. Do not read the other reviewers' reports yet. Mark `round-1-perf` complete.
+>
+> **Round 2 — task `round-2-perf`:** This task is blocked until all three Round 1 tasks complete. Once it unblocks, claim it. Read the other two reports: `docs/review-round1-security.md` and `docs/review-round1-test.md`. Challenge at least one finding from each report — name the reviewer, the specific finding, and give a concrete reason. State a revised verdict if your position changed. Append everything to `docs/review-round1-perf.md` under a `## Round 2 Challenges` heading. Mark `round-2-perf` complete.
 
 **For `test`:**
 
-> You are the test coverage reviewer for the Discord integration PR. Read the spec at `docs/specs/discord-integration.md`, the diff (`git diff main...HEAD --stat`, then read changed files), and conventions in `CLAUDE.md` and `docs/agent/`. Produce a test coverage review following your agent definition's format — findings with severity ratings, then a final verdict: `approve`, `approve-with-changes`, or `block`. Write your full report to `docs/review-round1-test.md`. Do not read the other reviewers' reports yet. When done, mark task `round-1-test` complete, then **stay available** — the lead will send you Round 2 instructions via message.
+> You are the test coverage reviewer for the Discord integration PR. Your work has two rounds — complete both before finishing.
+>
+> **Round 1 — task `round-1-test`:** Read the spec at `docs/specs/discord-integration.md`, the diff (`git diff main...HEAD --stat`, then read changed files), and conventions in `CLAUDE.md` and `docs/agent/`. Produce a test coverage review following your agent definition's format — findings with severity ratings, then a final verdict: `approve`, `approve-with-changes`, or `block`. Write your full report to `docs/review-round1-test.md`. Do not read the other reviewers' reports yet. Mark `round-1-test` complete.
+>
+> **Round 2 — task `round-2-test`:** This task is blocked until all three Round 1 tasks complete. Once it unblocks, claim it. Read the other two reports: `docs/review-round1-security.md` and `docs/review-round1-perf.md`. Challenge at least one finding from each report — name the reviewer, the specific finding, and give a concrete reason. State a revised verdict if your position changed. Append everything to `docs/review-round1-test.md` under a `## Round 2 Challenges` heading. Mark `round-2-test` complete.
 
-### Step 3 — Trigger Round 2 when all three Round 1 tasks complete
+### Step 3 — Wait for all Round 2 tasks to complete
 
-Once tasks `round-1-security`, `round-1-perf`, and `round-1-test` are all complete, send each reviewer a message using `SendMessage`. Send all three messages before waiting for replies. **Do NOT spawn new teammates — the same `security`, `perf`, and `test` sessions from Step 2 are still alive and waiting.**
-
-**Message to `security`:**
-
-> Round 1 is complete. Read the other two reports: `docs/review-round1-perf.md` and `docs/review-round1-test.md`. Challenge at least one finding from each report. Each challenge must name the reviewer, the specific finding, and give a concrete reason — for example, "perf-HIGH-1 recommends batching requests without rate limiting, which conflicts with the token-per-request constraint in the spec." If both reports agree with your findings, challenge whichever finding has the weakest justification and explain what stronger evidence would be needed. After writing your challenges, state a revised verdict if your position changed. Append everything to `docs/review-round1-security.md` under a `## Round 2 Challenges` heading.
-
-**Message to `perf`:**
-
-> Round 1 is complete. Read the other two reports: `docs/review-round1-security.md` and `docs/review-round1-test.md`. Challenge at least one finding from each report. Each challenge must name the reviewer, the specific finding, and give a concrete reason — for example, "security-HIGH-2 requires re-validating tokens on every message event, which adds 40–80 ms per event without a corresponding threat in the threat model." If both reports agree with your findings, challenge whichever finding has the weakest justification and explain what stronger evidence would be needed. After writing your challenges, state a revised verdict if your position changed. Append everything to `docs/review-round1-perf.md` under a `## Round 2 Challenges` heading.
-
-**Message to `test`:**
-
-> Round 1 is complete. Read the other two reports: `docs/review-round1-security.md` and `docs/review-round1-perf.md`. Challenge at least one finding from each report. Each challenge must name the reviewer, the specific finding, and give a concrete reason — for example, "security-MEDIUM-3 asks for a fix but neither report requires a test to verify that fix." If both reports agree with your findings, challenge whichever finding has the weakest justification and explain what stronger evidence would be needed. After writing your challenges, state a revised verdict if your position changed. Append everything to `docs/review-round1-test.md` under a `## Round 2 Challenges` heading.
-
-Once all three reviewers have replied and updated their files, mark task `round-2-cross-challenge` complete.
+Monitor the task list. Once `round-2-security`, `round-2-perf`, and `round-2-test` are all complete, proceed to synthesis.
 
 ### Step 4 — Synthesize (Round 3)
 
