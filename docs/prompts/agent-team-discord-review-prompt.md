@@ -30,19 +30,19 @@ Use these spawn prompts verbatim, substituting the bracketed values:
 
 **For `security`:**
 
-> You are the security reviewer for the Discord integration PR. Read the spec at `docs/specs/discord-integration.md`, the diff (`git diff main...HEAD --stat`, then read changed files), and conventions in `CLAUDE.md` and `docs/agent/`. Produce a security review following your agent definition's format — findings with severity ratings, then a final verdict: `approve`, `approve-with-changes`, or `block`. Write your full report to `docs/review-round1-security.md`. Do not read the other reviewers' reports yet. When done, mark task `round-1-security` complete.
+> You are the security reviewer for the Discord integration PR. Read the spec at `docs/specs/discord-integration.md`, the diff (`git diff main...HEAD --stat`, then read changed files), and conventions in `CLAUDE.md` and `docs/agent/`. Produce a security review following your agent definition's format — findings with severity ratings, then a final verdict: `approve`, `approve-with-changes`, or `block`. Write your full report to `docs/review-round1-security.md`. Do not read the other reviewers' reports yet. When done, mark task `round-1-security` complete, then **stay available** — the lead will send you Round 2 instructions via message.
 
 **For `perf`:**
 
-> You are the performance reviewer for the Discord integration PR. Read the spec at `docs/specs/discord-integration.md`, the diff (`git diff main...HEAD --stat`, then read changed files), and conventions in `CLAUDE.md` and `docs/agent/`. Produce a performance review following your agent definition's format — findings with severity ratings, then a final verdict: `approve`, `approve-with-changes`, or `block`. Write your full report to `docs/review-round1-perf.md`. Do not read the other reviewers' reports yet. When done, mark task `round-1-perf` complete.
+> You are the performance reviewer for the Discord integration PR. Read the spec at `docs/specs/discord-integration.md`, the diff (`git diff main...HEAD --stat`, then read changed files), and conventions in `CLAUDE.md` and `docs/agent/`. Produce a performance review following your agent definition's format — findings with severity ratings, then a final verdict: `approve`, `approve-with-changes`, or `block`. Write your full report to `docs/review-round1-perf.md`. Do not read the other reviewers' reports yet. When done, mark task `round-1-perf` complete, then **stay available** — the lead will send you Round 2 instructions via message.
 
 **For `test`:**
 
-> You are the test coverage reviewer for the Discord integration PR. Read the spec at `docs/specs/discord-integration.md`, the diff (`git diff main...HEAD --stat`, then read changed files), and conventions in `CLAUDE.md` and `docs/agent/`. Produce a test coverage review following your agent definition's format — findings with severity ratings, then a final verdict: `approve`, `approve-with-changes`, or `block`. Write your full report to `docs/review-round1-test.md`. Do not read the other reviewers' reports yet. When done, mark task `round-1-test` complete.
+> You are the test coverage reviewer for the Discord integration PR. Read the spec at `docs/specs/discord-integration.md`, the diff (`git diff main...HEAD --stat`, then read changed files), and conventions in `CLAUDE.md` and `docs/agent/`. Produce a test coverage review following your agent definition's format — findings with severity ratings, then a final verdict: `approve`, `approve-with-changes`, or `block`. Write your full report to `docs/review-round1-test.md`. Do not read the other reviewers' reports yet. When done, mark task `round-1-test` complete, then **stay available** — the lead will send you Round 2 instructions via message.
 
 ### Step 3 — Trigger Round 2 when all three Round 1 tasks complete
 
-Once tasks `round-1-security`, `round-1-perf`, and `round-1-test` are all complete, send each reviewer a message using `SendMessage`. Send all three messages before waiting for replies.
+Once tasks `round-1-security`, `round-1-perf`, and `round-1-test` are all complete, send each reviewer a message using `SendMessage`. Send all three messages before waiting for replies. **Do NOT spawn new teammates — the same `security`, `perf`, and `test` sessions from Step 2 are still alive and waiting.**
 
 **Message to `security`:**
 

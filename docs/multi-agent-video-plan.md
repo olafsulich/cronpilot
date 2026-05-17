@@ -120,7 +120,7 @@ The `apps/web/src/app/(dashboard)/integrations/<type>/page.tsx` files use _diffe
 
 **Goal:** three agents review the Discord PR with different priorities, _disagree_, and resolve.
 
-**Demo:** with `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` enabled, three reviewer agents post independent reports, then read each other's reports and **challenge** at least one finding. Synthesizer produces a single review with a verdict.
+**Demo:** with `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` enabled, three reviewer agents are spawned once and persist across both rounds. Round 1: each posts an independent report. Round 2: the lead sends each agent a `SendMessage` — same sessions, no re-spawning — and they challenge each other's findings. Synthesizer produces a single review with a verdict.
 
 **On screen:** three personas tuned to disagree on different axes:
 
@@ -137,7 +137,7 @@ Force at least one cross-challenge. Without disagreement, the demo collapses int
 - `.claude/agents/test-reviewer.md`
 - `docs/prompts/agent-team-discord-review-prompt.md` — the 3-round orchestrator
 
-**Teaching moment:** the difference vs subagents is Round 2 — agents read each other and push back. That's the discussion the technique is _for_.
+**Teaching moment:** the difference vs subagents is Round 2 — agents read each other and push back using `SendMessage` to the same persistent sessions. No re-spawning between rounds.
 
 ## Scene 4 — Ralph Loop
 
