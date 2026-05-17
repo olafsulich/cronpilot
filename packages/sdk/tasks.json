@@ -47,6 +47,6 @@
 	{
 		"id": "typecheck",
 		"description": "pnpm --filter @cronpilot/sdk typecheck (tsc --noEmit) exits clean",
-		"passes": false
+		"passes": true
 	}
 ]

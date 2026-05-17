@@ -26,3 +26,6 @@ Fixed tsconfig.json to allow emit: added `"allowImportingTsExtensions": false` (
 
 ## Iteration 9 — tests
 All 10 tests were already passing from prior iterations (ping happy path, body fields, 4xx no-retry, 5xx retry, network retry, timeout). Marked task as passes: true. Build/test health: 10/10 tests pass, typecheck clean.
+
+## Iteration 10 — typecheck
+tsc --noEmit already exits with code 0; no source changes needed. Marked task as passes: true. Build/test health: 10/10 tests pass, typecheck exits clean (code 0).
