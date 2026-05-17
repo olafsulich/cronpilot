@@ -44,15 +44,17 @@ Rules:
 - If something genuinely blocks progress, output a short explanation of what is blocked and stop.
 EOF
 
+TMPFILE=$(mktemp)
+trap 'rm -f "$TMPFILE"' EXIT
+
 for ((i=1; i<=ITERATIONS; i++)); do
   echo "=== Iteration $i/$ITERATIONS ==="
-  result=$(claude --dangerously-skip-permissions -p "$RALPH_INSTRUCTIONS @$TASKS_FILE @$PROGRESS_FILE $(cat "$PROMPT_FILE")") || {
-    echo "claude exited with code $? on iteration $i" >&2
+  claude --dangerously-skip-permissions -p "$RALPH_INSTRUCTIONS @$TASKS_FILE @$PROGRESS_FILE $(cat "$PROMPT_FILE")" | tee "$TMPFILE" || {
+    echo "claude exited with an error on iteration $i" >&2
     exit 1
   }
-  echo "$result"
 
-  if [[ "$result" == *"<promise>COMPLETE</promise>"* ]]; then
+  if grep -q "<promise>COMPLETE</promise>" "$TMPFILE"; then
     echo "Complete after $i iterations."
     exit 0
   fi
