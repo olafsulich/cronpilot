@@ -7,46 +7,46 @@
 	{
 		"id": "tsconfig",
 		"description": "packages/sdk/tsconfig.json exists extending the workspace base pattern (see packages/shared/tsconfig.json)",
-		"passes": true
+		"passes": false
 	},
 	{
 		"id": "source-exports",
 		"description": "packages/sdk/src/index.ts exports Cronpilot, CronpilotClientError, CronpilotServerError",
-		"passes": true
+		"passes": false
 	},
 	{
 		"id": "ping-happy-path",
 		"description": "Cronpilot.ping() POSTs to correct URL with JSON body, returns Promise<void> on 2xx, default status ok",
-		"passes": true
+		"passes": false
 	},
 	{
 		"id": "error-classes",
 		"description": "CronpilotClientError (4xx, no retry, has status: number) and CronpilotServerError (5xx/network, has status?: number and cause?: unknown) exported",
-		"passes": true
+		"passes": false
 	},
 	{
 		"id": "retry-backoff",
 		"description": "5xx and network errors retry up to retries times (default 2) with 200ms * 2^attempt exponential backoff; 4xx does not retry",
-		"passes": true
+		"passes": false
 	},
 	{
 		"id": "timeout",
 		"description": "AbortSignal.timeout(timeout) enforced per attempt; default 5000ms",
-		"passes": true
+		"passes": false
 	},
 	{
 		"id": "build",
 		"description": "pnpm --filter @cronpilot/sdk build succeeds; dist/index.js and dist/index.d.ts are produced",
-		"passes": true
+		"passes": false
 	},
 	{
 		"id": "tests",
 		"description": "pnpm --filter @cronpilot/sdk test passes all six cases: default ping URL, body fields (status/duration/exitCode), 4xx no-retry, 5xx retry, network retry, timeout",
-		"passes": true
+		"passes": false
 	},
 	{
 		"id": "typecheck",
 		"description": "pnpm --filter @cronpilot/sdk typecheck (tsc --noEmit) exits clean",
-		"passes": true
+		"passes": false
 	}
 ]
