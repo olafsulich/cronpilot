@@ -29,10 +29,10 @@ return createIntegration(request.team.id, parsed.data);
 
 ```ts
 export const CreateIntegrationSchema = z.discriminatedUnion("type", [
-  z.object({ type: z.literal("slack"),     config: SlackConfigSchema }),
+  z.object({ type: z.literal("slack"), config: SlackConfigSchema }),
   z.object({ type: z.literal("pagerduty"), config: PagerDutyConfigSchema }),
-  z.object({ type: z.literal("webhook"),   config: WebhookConfigSchema }),
-  z.object({ type: z.literal("email"),     config: EmailConfigSchema }),
+  z.object({ type: z.literal("webhook"), config: WebhookConfigSchema }),
+  z.object({ type: z.literal("email"), config: EmailConfigSchema }),
 ]);
 ```
 
@@ -43,7 +43,7 @@ export const CreateIntegrationSchema = z.discriminatedUnion("type", [
 **File:** `apps/api/src/lib/encryption.ts:23`
 
 ```ts
-export function encrypt(plaintext: string): string
+export function encrypt(plaintext: string): string;
 ```
 
 Uses Node's `crypto` with `aes-256-gcm`, a 12-byte random IV, and base64-encodes a JSON envelope `{ iv, tag, data }`.
@@ -96,14 +96,18 @@ There is no dedicated Slack processor file. All integration types are dispatched
 2. **Fetch monitor + alert rules** — Prisma query at lines 34–43 loads the monitor with all `alertRules` and their nested `integration` records. A second query at lines 61–64 fetches the `open` alert for `failureCount`.
 
 3. **Deduplication check** — Per rule, at line 81:
+
    ```ts
-   const shouldNotify = failureCount === 1 || failureCount % rule.notifyAfter === 0;
+   const shouldNotify =
+     failureCount === 1 || failureCount % rule.notifyAfter === 0;
    ```
+
    Rules that don't meet the threshold are skipped.
 
 4. **Decrypt config** — At lines 98–105, `decrypt()` (from `apps/worker/src/lib/encryption.ts`) decrypts `integration.config`, then `JSON.parse`d. Then a `switch` on `integration.type` at line 110 routes to the correct dispatcher.
 
 5. **Dispatch to Slack** — `dispatchSlack()` at lines 170–214:
+
    ```ts
    const payload = {
      text: `${emoji} Monitor *${monitorName}* ${verb}${suffix}`,
@@ -111,6 +115,7 @@ There is no dedicated Slack processor file. All integration types are dispatched
    };
    await axios.post(config.webhookUrl, payload, { timeout: 10_000 });
    ```
+
    Message formatting is entirely inline — no shared utility is called.
 
 6. **No "mark delivered" write** — After a successful dispatch, the success path only logs. Alert lifecycle changes happen in a separate `alert-resolve` queue.
@@ -124,6 +129,7 @@ ALERT: "alert",
 ```
 
 Two `Queue` instances, one per app:
+
 - **API (enqueues):** `apps/api/src/lib/queues.ts:8` — `new Queue(QUEUES.ALERT, { connection })`
 - **Worker (consumes):** `apps/worker/src/lib/queues.ts:8` — same construction
 
@@ -178,7 +184,7 @@ export interface SlackConfig {
 The `IntegrationsPage` default export (lines 33–140) renders the full page. It fetches the integration list at line 41:
 
 ```ts
-useSWR<Integration[]>("/integrations", fetcher)
+useSWR<Integration[]>("/integrations", fetcher);
 ```
 
 The list maps over results (lines 94–126), rendering each as a card with icon (from `INTEGRATION_ICONS` at lines 17–22), name, type label, and a delete button that calls `apiClient.delete`.
@@ -198,14 +204,33 @@ defaultValues: { type: "slack" },
 
 ```ts
 export const IntegrationCreateSchema = z.discriminatedUnion("type", [
-  z.object({ type: z.literal("slack"),     name: z.string().min(1).max(255), webhookUrl: z.string().url(), channel: z.string().min(1) }),
-  z.object({ type: z.literal("pagerduty"), name: z.string().min(1).max(255), integrationKey: z.string().min(1) }),
-  z.object({ type: z.literal("webhook"),   name: z.string().min(1).max(255), url: z.string().url(), secret: z.string().min(1) }),
-  z.object({ type: z.literal("email"),     name: z.string().min(1).max(255), address: z.string().email() }),
+  z.object({
+    type: z.literal("slack"),
+    name: z.string().min(1).max(255),
+    webhookUrl: z.string().url(),
+    channel: z.string().min(1),
+  }),
+  z.object({
+    type: z.literal("pagerduty"),
+    name: z.string().min(1).max(255),
+    integrationKey: z.string().min(1),
+  }),
+  z.object({
+    type: z.literal("webhook"),
+    name: z.string().min(1).max(255),
+    url: z.string().url(),
+    secret: z.string().min(1),
+  }),
+  z.object({
+    type: z.literal("email"),
+    name: z.string().min(1).max(255),
+    address: z.string().email(),
+  }),
 ]);
 ```
 
 **Slack-specific fields** (lines 233–258):
+
 - Hidden `type` input (always present)
 - `name` text input (always present)
 - `webhookUrl` — `type="url"`, placeholder `https://hooks.slack.com/services/...`
@@ -228,13 +253,27 @@ On success: closes modal, calls `mutate()` to refresh SWR cache.
 export type IntegrationType = "slack" | "pagerduty" | "webhook" | "email";
 
 // lines 3–19 — per-type config shapes
-export interface SlackConfig     { webhookUrl: string; channel: string; }
-export interface PagerDutyConfig { integrationKey: string; }
-export interface WebhookConfig   { url: string; secret: string; }
-export interface EmailConfig     { address: string; }
+export interface SlackConfig {
+  webhookUrl: string;
+  channel: string;
+}
+export interface PagerDutyConfig {
+  integrationKey: string;
+}
+export interface WebhookConfig {
+  url: string;
+  secret: string;
+}
+export interface EmailConfig {
+  address: string;
+}
 
 // line 21
-export type IntegrationConfig = SlackConfig | PagerDutyConfig | WebhookConfig | EmailConfig;
+export type IntegrationConfig =
+  | SlackConfig
+  | PagerDutyConfig
+  | WebhookConfig
+  | EmailConfig;
 ```
 
 ### Tests
@@ -245,32 +284,32 @@ No UI tests exist for the integrations page. The only test file in the web app i
 
 ## Code References
 
-| Location | Purpose |
-|---|---|
-| `apps/api/src/routes/integrations.ts:24–32` | `POST /integrations` route handler |
-| `apps/api/src/services/integrations.ts:12–15` | `SlackConfigSchema` |
-| `apps/api/src/services/integrations.ts:31–36` | `CreateIntegrationSchema` discriminated union |
-| `apps/api/src/services/integrations.ts:106–116` | Encrypt + persist integration config |
-| `apps/api/src/lib/encryption.ts:23` | `encrypt(plaintext: string): string` |
-| `packages/db/prisma/schema.prisma:107–120` | `Integration` Prisma model |
-| `packages/shared/src/queues.ts:2` | `QUEUES.ALERT = "alert"` |
-| `packages/shared/src/types/integration.ts:1–21` | `IntegrationType`, per-type config interfaces |
-| `packages/shared/src/types/api.ts:40–65` | `IntegrationCreateSchema` (shared between API + web) |
-| `apps/api/src/lib/queues.ts:8` | Alert queue instance (API side) |
-| `apps/worker/src/lib/queues.ts:8` | Alert queue instance (worker side) |
-| `apps/worker/src/lib/encryption.ts` | `decrypt()` used by processor |
-| `apps/worker/src/processors/check-window.ts:87–96` | Alert job enqueue site |
-| `apps/worker/src/processors/alert.ts:24` | `processAlert` entry point |
-| `apps/worker/src/processors/alert.ts:81` | `notifyAfter` deduplication check |
-| `apps/worker/src/processors/alert.ts:98–105` | Config decrypt + JSON.parse |
-| `apps/worker/src/processors/alert.ts:110–112` | `switch(integration.type)` dispatch |
-| `apps/worker/src/processors/alert.ts:109–166` | Error swallowing per integration |
-| `apps/worker/src/processors/alert.ts:170–214` | `dispatchSlack()` — inline message build + HTTP POST |
-| `apps/worker/src/worker.ts:50–53` | BullMQ Worker registration |
-| `apps/web/src/app/(dashboard)/settings/integrations/page.tsx:33–140` | `IntegrationsPage` — list rendering |
-| `apps/web/src/app/(dashboard)/settings/integrations/page.tsx:142–339` | `AddIntegrationModal` — form |
-| `apps/web/src/app/(dashboard)/settings/integrations/page.tsx:158` | `zodResolver(IntegrationCreateSchema)` |
-| `apps/web/src/app/(dashboard)/settings/integrations/page.tsx:168–177` | `apiClient.post("/integrations", values)` |
+| Location                                                              | Purpose                                              |
+| --------------------------------------------------------------------- | ---------------------------------------------------- |
+| `apps/api/src/routes/integrations.ts:24–32`                           | `POST /integrations` route handler                   |
+| `apps/api/src/services/integrations.ts:12–15`                         | `SlackConfigSchema`                                  |
+| `apps/api/src/services/integrations.ts:31–36`                         | `CreateIntegrationSchema` discriminated union        |
+| `apps/api/src/services/integrations.ts:106–116`                       | Encrypt + persist integration config                 |
+| `apps/api/src/lib/encryption.ts:23`                                   | `encrypt(plaintext: string): string`                 |
+| `packages/db/prisma/schema.prisma:107–120`                            | `Integration` Prisma model                           |
+| `packages/shared/src/queues.ts:2`                                     | `QUEUES.ALERT = "alert"`                             |
+| `packages/shared/src/types/integration.ts:1–21`                       | `IntegrationType`, per-type config interfaces        |
+| `packages/shared/src/types/api.ts:40–65`                              | `IntegrationCreateSchema` (shared between API + web) |
+| `apps/api/src/lib/queues.ts:8`                                        | Alert queue instance (API side)                      |
+| `apps/worker/src/lib/queues.ts:8`                                     | Alert queue instance (worker side)                   |
+| `apps/worker/src/lib/encryption.ts`                                   | `decrypt()` used by processor                        |
+| `apps/worker/src/processors/check-window.ts:87–96`                    | Alert job enqueue site                               |
+| `apps/worker/src/processors/alert.ts:24`                              | `processAlert` entry point                           |
+| `apps/worker/src/processors/alert.ts:81`                              | `notifyAfter` deduplication check                    |
+| `apps/worker/src/processors/alert.ts:98–105`                          | Config decrypt + JSON.parse                          |
+| `apps/worker/src/processors/alert.ts:110–112`                         | `switch(integration.type)` dispatch                  |
+| `apps/worker/src/processors/alert.ts:109–166`                         | Error swallowing per integration                     |
+| `apps/worker/src/processors/alert.ts:170–214`                         | `dispatchSlack()` — inline message build + HTTP POST |
+| `apps/worker/src/worker.ts:50–53`                                     | BullMQ Worker registration                           |
+| `apps/web/src/app/(dashboard)/settings/integrations/page.tsx:33–140`  | `IntegrationsPage` — list rendering                  |
+| `apps/web/src/app/(dashboard)/settings/integrations/page.tsx:142–339` | `AddIntegrationModal` — form                         |
+| `apps/web/src/app/(dashboard)/settings/integrations/page.tsx:158`     | `zodResolver(IntegrationCreateSchema)`               |
+| `apps/web/src/app/(dashboard)/settings/integrations/page.tsx:168–177` | `apiClient.post("/integrations", values)`            |
 
 ---
 
